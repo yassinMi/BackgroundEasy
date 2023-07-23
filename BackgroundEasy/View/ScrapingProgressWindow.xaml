@@ -1,0 +1,31 @@
+﻿<Window x:Class="BackgroundEasy.View.ScrapingProgressWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:MiCommon="clr-namespace:Mi.Common"
+        xmlns:local="clr-namespace:BackgroundEasy"
+    xmlns:mi="clr-namespace:Mi.Common" 
+        xmlns:custom="http://metro.mahapps.com/winfx/xaml/iconpacks"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+         xmlns:ViewModel="clr-namespace:BackgroundEasy.ViewModel" 
+        xmlns:Converters="clr-namespace:BackgroundEasy.Converters"
+        xmlns:View="clr-namespace:BackgroundEasy.View" 
+    xmlns:AttachedMi="clr-namespace:Mi.Attached"
+    xmlns:AttachedComMi="clr-namespace:Mi.Common.Attached"
+    xmlns:Converters1="clr-namespace:Converters" 
+    Background="{DynamicResource MaterialDesignPaper}"
+        Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Display" 
+        TextOptions.TextRenderingMode="Auto"
+        FontFamily="Roboto"
+        mc:Ignorable="d"
+        UseLayoutRounding="True"
+        materialDesign:ThemeAssist.Theme="Light"
+        Title="Downloading" Height="246" Width="300" WindowStartupLocation="CenterOwner" ResizeMode="CanMinimize" ShowInTaskbar="False" WindowStyle="SingleBorderWindow">
+    <Grid>
+        <View:ScrapingProgressView/>
+    </Grid>
+</Window>

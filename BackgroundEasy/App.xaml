@@ -1,0 +1,259 @@
+﻿<Application x:Class="BackgroundEasy.App"
+            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:BackgroundEasy"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             ShutdownMode="OnLastWindowClose"
+             Startup="Application_Startup">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <materialDesign:CustomColorTheme  BaseTheme="Light" PrimaryColor="#FF1A75B5" SecondaryColor="#FFF0D59F">
+                    <materialDesign:CustomColorTheme.ColorAdjustment>
+                        <materialDesign:ColorAdjustment Colors="Primary" Contrast="Low" DesiredContrastRatio="4">
+
+                        </materialDesign:ColorAdjustment>
+                    </materialDesign:CustomColorTheme.ColorAdjustment>
+
+                </materialDesign:CustomColorTheme>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+
+            </ResourceDictionary.MergedDictionaries>
+            <materialDesign:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+
+            <SolidColorBrush x:Key="MaterialDesignPaperDarker" Color="#FF26292C"/>
+            <SolidColorBrush x:Key="MiTextBodyAlt" Color="#FF6FB8DC"/>
+            <SolidColorBrush x:Key="MiTextBodyVibSecondaryDarkTheme" Color="#FFF3BE30"/>
+            <SolidColorBrush x:Key="MiTextBodyVibSecondaryLightTheme" Color="#FFD39D0F"/>
+            <SolidColorBrush x:Key="MiTextBodyVibSecondary" Color="#FFF3BE30"/>
+
+            <SolidColorBrush x:Key="MiTextBodyVibPrimaryDarkTheme" Color="#FFE16C59"/>
+            <SolidColorBrush x:Key="MiTextBodyVibPrimaryLightTheme" Color="Black"/>
+            <SolidColorBrush x:Key="MiTextBodyVibPrimary" Color="#FF1655AE"/>
+            <SolidColorBrush x:Key="MiErrorDarkTheme" Color="#FFFF5858"/>
+            <SolidColorBrush x:Key="MiErrorLightTheme" Color="#FFEC2727"/>
+            <SolidColorBrush x:Key="MiError" Color="#FFFF6767"/>
+            <SolidColorBrush x:Key="MiProgressGreen" Color="#FF0DB680"/>
+            <SolidColorBrush x:Key="MiPrimayDark06" Color="#FFFF6767"/>
+            <!--0.6 opacity -->
+
+            <!--SolidColorBrush x:Key="MaterialDesignBody" Color="#ffffffff"/>
+            <SolidColorBrush x:Key="MaterialDesignBodyLight" Color="#ffd0d1d2"/>
+            <SolidColorBrush x:Key="MaterialDesignPaper" Color="#FF222425"/-->
+
+            <!--SolidColorBrush x:Key="MaterialDesignBody" Color="#000000"/>
+            <SolidColorBrush x:Key="MaterialDesignBodyLight" Color="#ff1c1c1c"/>
+            <SolidColorBrush x:Key="MaterialDesignPaper" Color="#fffafafa"/-->
+
+
+            <!--palette-->
+            <SolidColorBrush x:Key="PaletteSuccessGreen" Color="#FF90d68d"/>
+            <SolidColorBrush x:Key="PaletteDarkBlue" Color="#FF2F414F"/>
+            <SolidColorBrush x:Key="PaletteBlue" Color="#FF3894A3"/>
+            <SolidColorBrush x:Key="PaletteWhite" Color="#FFF1F1EF"/>
+            <SolidColorBrush x:Key="PaletteLightGreen" Color="#FFC7DAD4"/>
+            <SolidColorBrush x:Key="MiGrayStatusBarBorderBrush" Color="#FFB2B2B2"/>
+        
+
+           
+
+            <Style x:Key="WisImportBut" TargetType="Button" BasedOn="{StaticResource MaterialDesignFlatMidBgButton}" >
+                <Setter Property="Height" Value="30"/>
+
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="materialDesign:ButtonAssist.CornerRadius" Value="7"/>
+            </Style>
+           
+            <Style x:Key="MiLitePrettyActionButtonStyle"  BasedOn="{StaticResource MaterialDesignFlatButton }" TargetType="Button">
+                <Setter Property="Foreground" Value="{DynamicResource MaterialDesignBody}" />
+                <Setter Property="Background" Value="{StaticResource PaletteLightGreen}" />
+                
+            </Style>
+
+
+            
+
+            <Style TargetType="TextBlock" x:Key="SidePanelHeaderTextBoxStyle" BasedOn="{StaticResource MaterialDesignSubtitle2TextBlock}">
+                <Setter Property="Margin" Value="6,0,0,0"/>
+                <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+                <Setter Property="HorizontalAlignment" Value="Left"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="Foreground" Value="{DynamicResource MaterialDesignBodyLight}"/>
+            </Style>
+
+            <Style TargetType="TextBlock" x:Key="StatsValueTextBlockStyle" 
+                   BasedOn="{StaticResource MaterialDesignCaptionTextBlock}">
+                <Setter Property="Margin" Value="6,0,0,0"/>
+                <Setter Property="HorizontalAlignment" Value="Left"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="FontWeight" Value="Bold"/>
+            </Style>
+            <Style TargetType="TextBlock" x:Key="StatsKeyTextBlockStyle" 
+                   BasedOn="{StaticResource MaterialDesignCaptionTextBlock}">
+                <Setter Property="Margin" Value="6,0,0,0"/>
+                <Setter Property="HorizontalAlignment" Value="Left"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+            </Style>
+
+
+            <!--object brushes-->
+            <SolidColorBrush x:Key="FolUpStatus.Cold.Brush" Color="#FF1852BB" />
+            <SolidColorBrush x:Key="FolUpStatus.Sql.Brush" Color="#FFFF6565" />
+            <SolidColorBrush x:Key="FolUpStatus.Won.Brush" Color="#FF0DB680" />
+            <SolidColorBrush x:Key="FolUpStatus.Lost.Brush" Color="#FF323232" />
+            <SolidColorBrush x:Key="FolUpStatus.Sold.Brush" Color="#FFD6B20F" />
+
+            <SolidColorBrush x:Key="FolUpNextActionStatus.None.Brush" Color="White" />
+            <SolidColorBrush x:Key="FolUpNextActionStatus.Overdue.Brush" Color="#FFB6150D" />
+            <SolidColorBrush x:Key="FolUpNextActionStatus.Ok.Brush" Color="#FF0DB680" />
+
+            <SolidColorBrush x:Key="FolUpActionType.None.Brush" Color="White" />
+            <SolidColorBrush x:Key="FolUpActionType.Call.Brush" Color="#FFCD9F0E" />
+            <SolidColorBrush x:Key="FolUpActionType.Visit.Brush" Color="#FF658FFF" />
+            <SolidColorBrush x:Key="FolUpActionType.Email.Brush" Color="#FFFF6565" />
+            <SolidColorBrush x:Key="FolUpActionType.Whise.Brush" Color="#FFFF65F1" />
+            <SolidColorBrush x:Key="FolUpActionType.VisitFysiek.Brush" Color="#FF2B886D" />
+            <SolidColorBrush x:Key="FolUpActionType.VisitBrief.Brush" Color="#FF71DBD4" />
+
+
+            <Style x:Key="MiCancellationActionButtonStyle"  BasedOn="{StaticResource MaterialDesignOutlinedButton}" TargetType="Button">
+                <Setter Property="Background" Value="#FFEAEAEA" />
+                <Setter Property="BorderBrush" Value="#FFD6D6D6" />
+                <Setter Property="materialDesign:ButtonAssist.CornerRadius" Value="7" />
+                <Setter Property="Height" Value="30" />
+
+                <!--Background="" ="#"  ="0"-->
+            </Style>
+
+            <Style x:Key="MiImportantActionButtonStyle"  BasedOn="{StaticResource MaterialDesignRaisedButton }" TargetType="Button">
+
+            </Style>
+            <Style x:Key="MiLiteActionButtonStyle"  BasedOn="{StaticResource MaterialDesignFlatButton }" TargetType="Button">
+                <Setter Property="Foreground" Value="{DynamicResource MaterialDesignBody}" />
+            </Style>
+
+            <Style x:Key="SquaryIconButton" TargetType="{x:Type Button}">
+                <Setter Property="Padding" Value="0"/>
+                <Setter Property="Width" Value="48"/>
+                <Setter Property="Height" Value="48"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Button}">
+
+                            <Grid>
+                                <Rectangle x:Name="border" Fill="{TemplateBinding Background}" RenderTransformOrigin="0.5,0.5" RadiusX="80" RadiusY="80">
+                                    <Rectangle.RenderTransform>
+                                        <ScaleTransform CenterY="0.5" CenterX="0.5" ScaleY="1" ScaleX="1"/>
+                                    </Rectangle.RenderTransform>
+                                </Rectangle>
+                                <Rectangle x:Name="overlay" Fill="{TemplateBinding Foreground}" Opacity="0.16" Visibility="Hidden" RadiusX="80" RadiusY="80"/>
+                                <materialDesign:Ripple ClipToBounds="True" Clip="{Binding RenderedGeometry, ElementName=GeometryEllipse}" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" ContentStringFormat="{TemplateBinding ContentStringFormat}" Focusable="False" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                <Rectangle x:Name="GeometryEllipse" Focusable="False" Fill="Transparent" IsHitTestVisible="False" RadiusX="80" RadiusY="80"/>
+                            </Grid>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Visibility" TargetName="overlay" Value="Visible"/>
+                                </Trigger>
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter Property="Opacity" Value="0.38"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Style.BasedOn>
+                    <Style TargetType="{x:Type ButtonBase}">
+                        <Setter Property="FocusVisualStyle">
+                            <Setter.Value>
+                                <Style>
+                                    <Setter Property="Control.Template">
+                                        <Setter.Value>
+                                            <ControlTemplate>
+                                                <Rectangle Margin="2" SnapsToDevicePixels="True" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" StrokeThickness="1" StrokeDashArray="1 2"/>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </Setter.Value>
+                        </Setter>
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="BorderBrush" Value="Transparent"/>
+                        <Setter Property="Cursor" Value="Hand"/>
+                        <Setter Property="Foreground" Value="{DynamicResource PrimaryHueMidBrush}"/>
+                        <Setter Property="FontWeight" Value="Medium"/>
+                        <Setter Property="FontSize" Value="14"/>
+                        <Setter Property="BorderThickness" Value="0"/>
+                        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                        <Setter Property="VerticalContentAlignment" Value="Center"/>
+                        <Setter Property="Padding" Value="16,4"/>
+                        <Setter Property="Height" Value="32"/>
+                        <Setter Property="materialDesign:ButtonAssist.CornerRadius" Value="2"/>
+                        <Setter Property="materialDesign:RippleAssist.Feedback" Value="{DynamicResource PrimaryHueMidBrush}"/>
+                        <Setter Property="materialDesign:ButtonProgressAssist.IndicatorForeground" Value="{DynamicResource PrimaryHueMidBrush}"/>
+                        <Setter Property="materialDesign:ButtonProgressAssist.IndicatorBackground" Value="Transparent"/>
+                        <Setter Property="materialDesign:ButtonProgressAssist.IsIndicatorVisible" Value="False"/>
+                        <Setter Property="materialDesign:ButtonProgressAssist.Opacity" Value="0.4"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type ButtonBase}">
+                                    <Grid>
+                                        <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" CornerRadius="{Binding (materialDesign:ButtonAssist.CornerRadius), RelativeSource={RelativeSource TemplatedParent}}"/>
+                                        <ProgressBar x:Name="ProgressBar" BorderBrush="{Binding (materialDesign:ButtonProgressAssist.IndicatorBackground), RelativeSource={RelativeSource TemplatedParent}}" Background="{Binding (materialDesign:ButtonProgressAssist.IndicatorBackground), RelativeSource={RelativeSource TemplatedParent}}" Foreground="{Binding (materialDesign:ButtonProgressAssist.IndicatorForeground), RelativeSource={RelativeSource TemplatedParent}}" HorizontalAlignment="Left" Height="{TemplateBinding Height}" IsIndeterminate="{Binding (materialDesign:ButtonProgressAssist.IsIndeterminate), RelativeSource={RelativeSource TemplatedParent}}" Maximum="{Binding (materialDesign:ButtonProgressAssist.Maximum), RelativeSource={RelativeSource TemplatedParent}}" Minimum="{Binding (materialDesign:ButtonProgressAssist.Minimum), RelativeSource={RelativeSource TemplatedParent}}" Opacity="{Binding (materialDesign:ButtonProgressAssist.Opacity), RelativeSource={RelativeSource TemplatedParent}}" Style="{DynamicResource MaterialDesignLinearProgressBar}" Value="{Binding (materialDesign:ButtonProgressAssist.Value), RelativeSource={RelativeSource TemplatedParent}}" VerticalAlignment="Center" Width="{Binding ActualWidth, RelativeSource={RelativeSource FindAncestor, AncestorLevel=1, AncestorType={x:Type ButtonBase}}}">
+                                            <ProgressBar.Clip>
+                                                <MultiBinding UpdateSourceTrigger="Default">
+                                                    <Binding ElementName="border" Path="ActualWidth"/>
+                                                    <Binding ElementName="border" Path="ActualHeight"/>
+                                                    <Binding ElementName="border" Path="CornerRadius"/>
+                                                    <Binding ElementName="border" Path="BorderThickness"/>
+                                                </MultiBinding>
+                                            </ProgressBar.Clip>
+                                            <ProgressBar.Visibility>
+                                                <Binding Path="(materialDesign:ButtonProgressAssist.IsIndicatorVisible)" RelativeSource="{RelativeSource TemplatedParent}">
+                                                    <Binding.Converter>
+                                                        <BooleanToVisibilityConverter/>
+                                                    </Binding.Converter>
+                                                </Binding>
+                                            </ProgressBar.Visibility>
+                                        </ProgressBar>
+                                        <materialDesign:Ripple ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" ContentStringFormat="{TemplateBinding ContentStringFormat}" Focusable="False" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}">
+                                            <materialDesign:Ripple.Clip>
+                                                <MultiBinding UpdateSourceTrigger="Default">
+                                                    <Binding ElementName="border" Path="ActualWidth"/>
+                                                    <Binding ElementName="border" Path="ActualHeight"/>
+                                                    <Binding ElementName="border" Path="CornerRadius"/>
+                                                    <Binding ElementName="border" Path="BorderThickness"/>
+                                                </MultiBinding>
+                                            </materialDesign:Ripple.Clip>
+                                        </materialDesign:Ripple>
+                                    </Grid>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" TargetName="border">
+                                                <Setter.Value>
+                                                    <Binding ConverterParameter="0.16" Path="Foreground" RelativeSource="{RelativeSource TemplatedParent}">
+                                                        <Binding.Converter>
+                                                            <materialDesign:BrushOpacityConverter/>
+                                                        </Binding.Converter>
+                                                    </Binding>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Trigger>
+                                        <Trigger Property="IsEnabled" Value="False">
+                                            <Setter Property="Opacity" Value="0.38"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Style.BasedOn>
+            </Style>
+            <Style TargetType="Hyperlink" x:Key="MiHyperlinkAsLiteActionButton" BasedOn="{StaticResource MaterialDesignBody2Hyperlink}">
+                <Setter Property="Foreground" Value="{StaticResource PrimaryHueMidBrush}"/>
+
+            </Style>
+
+
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

@@ -1,0 +1,410 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{2B24A496-8262-2263-78B0-4C039731ED4A}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>BackgroundEasy</RootNamespace>
+    <AssemblyName>BackgroundEasy</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <WarningLevel>4</WarningLevel>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>app.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="CsvHelper, Version=29.0.0.0, Culture=neutral, PublicKeyToken=8c4959082be5c823, processorArchitecture=MSIL">
+      <HintPath>..\packages\CsvHelper.29.0.0\lib\net45\CsvHelper.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MahApps.Metro.IconPacks.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0c0d510f9915137a, processorArchitecture=MSIL">
+      <HintPath>..\packages\MahApps.Metro.IconPacks.Material.4.11.0\lib\net45\MahApps.Metro.IconPacks.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MahApps.Metro.IconPacks.FontAwesome, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0c0d510f9915137a, processorArchitecture=MSIL">
+      <HintPath>..\packages\MahApps.Metro.IconPacks.FontAwesome.4.11.0\lib\net45\MahApps.Metro.IconPacks.FontAwesome.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MahApps.Metro.IconPacks.Material, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0c0d510f9915137a, processorArchitecture=MSIL">
+      <HintPath>..\packages\MahApps.Metro.IconPacks.Material.4.11.0\lib\net45\MahApps.Metro.IconPacks.Material.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MaterialDesignColors, Version=2.0.6.0, Culture=neutral, PublicKeyToken=df2a72020bd7962a, processorArchitecture=MSIL">
+      <HintPath>..\packages\MaterialDesignColors.2.0.6\lib\net452\MaterialDesignColors.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MaterialDesignThemes.Wpf, Version=4.5.0.0, Culture=neutral, PublicKeyToken=df2a72020bd7962a, processorArchitecture=MSIL">
+      <HintPath>..\packages\MaterialDesignThemes.4.5.0\lib\net452\MaterialDesignThemes.Wpf.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAPICodePack, Version=1.1.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WindowsAPICodePack-Core.1.1.2\lib\Microsoft.WindowsAPICodePack.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAPICodePack.Shell, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WindowsAPICodePack-Shell.1.1.1\lib\Microsoft.WindowsAPICodePack.Shell.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Buffers, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Buffers.4.4.0\lib\netstandard1.1\System.Buffers.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.SQLite, Version=1.0.117.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.117.0\lib\net46\System.Data.SQLite.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Data.SQLite.Linq, Version=1.0.117.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Data.SQLite.Linq.1.0.117.0\lib\net46\System.Data.SQLite.Linq.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Memory, Version=4.0.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Memory.4.5.0\lib\netstandard1.1\System.Memory.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.0\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Security" />
+    <Reference Include="System.ValueTuple, Version=4.0.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.3.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="Trinet.Core.IO.Ntfs, Version=4.1.1.0, Culture=neutral, PublicKeyToken=0aeaaa20a328a46c, processorArchitecture=MSIL">
+      <HintPath>..\packages\Trinet.Core.IO.Ntfs.4.1.1\lib\net35\Trinet.Core.IO.Ntfs.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="Attached\DataGridRowAttachedProperties.cs" />
+    <Compile Include="Attached\PartScreenAttachedProperties.cs" />
+    <Compile Include="Attached\DropFilesAttachedProperties.cs" />
+    <Compile Include="Common\Attached\ChildWindowService.cs" />
+    <Compile Include="Common\Attached\DataGridMvvmHelper.cs" />
+    <Compile Include="Common\Attached\TextBoxAttachedProperties.cs" />
+    <Compile Include="Common\BindingProxy.cs" />
+    <Compile Include="Common\GridSpliterStateDictionary.cs" />
+    <Compile Include="Common\Rop.cs" />
+    <Compile Include="Common\SqliteMigrator.cs" />
+    <Compile Include="Common\TimeSpanExtenstions.cs" />
+    <Compile Include="Converters\IntToStrWithZeroToEmptyStr.cs" />
+    <Compile Include="Converters\IsAutoUpdatedToGroupHeaderConverter.cs" />
+    <Compile Include="Converters\IsCompletedToGroupHeaderTextConverter.cs" />
+    <Compile Include="Converters\BytesLongToStringConverter.cs" />
+    <Compile Include="Converters\OverdueDateTimeConverter.cs" />
+    <Compile Include="Converters\PromptTypeToFontAwesomeIconKindConverter.cs" />
+    <Compile Include="Model\OutputAttribute.cs" />
+    <Compile Include="Model\ScrapingOptions.cs" />
+    <Compile Include="Model\Exceptions.cs" />
+    <Compile Include="Model\NotifyPropertyChanage.cs" />
+    <Compile Include="Model\STask.cs" />
+    <Compile Include="Services\ConfigService.cs" />
+    <Compile Include="Services\CoreUtils.cs" />
+    <Compile Include="Services\CSVUtils.cs" />
+    <Compile Include="Services\Prompt.cs" />
+    <Compile Include="Services\ScrapingHelper.cs" />
+    <Compile Include="Services\StorageHelper.cs" />
+    <Compile Include="Services\UserSettings.cs" />
+    <Compile Include="Services\Utils.cs" />
+    <Compile Include="Services\WebHelper.cs" />
+    <Compile Include="Services\XLSXExceptions.cs" />
+    <Compile Include="ViewModel\BaseSidePanelViewModel.cs" />
+    <Compile Include="ViewModel\BaseViewModel.cs" />
+    <Compile Include="ViewModel\MainVM.cs" />
+    <Compile Include="ViewModel\SettingsVM.cs" />
+    <Compile Include="ViewModel\PromptWindowVM.cs" />
+    <Compile Include="ViewModel\ScrapingProgressVM.cs" />
+    <Compile Include="View\AboutWindow.xaml.cs">
+      <DependentUpon>AboutWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ItemsCollectionView.xaml.cs">
+      <DependentUpon>ItemsCollectionView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\SettingsWindow.xaml.cs">
+      <DependentUpon>SettingsWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\PromptWindow.xaml.cs">
+      <DependentUpon>PromptWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ScrapingProgressView.xaml.cs">
+      <DependentUpon>ScrapingProgressView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ScrapingProgressWindow.xaml.cs">
+      <DependentUpon>ScrapingProgressWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Selectors\DataTemplateSelectors.cs" />
+    <Page Include="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Attached\ExpanderAttachedProperties.cs" />
+    <Compile Include="Attached\TabControlAttached.cs" />
+    <Compile Include="Attached\TextBoxAttachedProperties.cs" />
+    <Compile Include="Common\ApplicationInfo.cs" />
+    <Compile Include="Common\IOUtils.cs" />
+    <Compile Include="Common\MICommand.cs" />
+    <Compile Include="Converters\DateTimeConverters.cs" />
+    <Compile Include="Converters\IntToVisibilityConverter.cs" />
+    <Compile Include="Converters\NullableBoolToComboBoxIx.cs" />
+    <Compile Include="Converters\RadioValueToIsCheckedConverter.cs" />
+    <Compile Include="Converters\SelectedTabIndexToIsTabItemSelectedConverte.cs" />
+    <Compile Include="Converters\StringAppendConverter.cs" />
+    <Compile Include="Converters\VisibleIfEnumValueMatchesStringParam.cs" />
+    <Compile Include="Converters\VisibleIfNonNullOrEmptyString.cs" />
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Page Include="View\AboutWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\ItemsCollectionView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\SettingsWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\PromptWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\ScrapingProgressView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ScrapingProgressWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <None Include="app.manifest" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\appicon.ico" />
+    <Resource Include="Icons\doc.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Media\home-16-white.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Media\remove.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Model\E\" />
+    <Folder Include="Model\Serialization\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="app.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Media\128.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Media\excel-24-prim.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Media\icons8-microsoft-excel-24-000000.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Media\icons8-microsoft-excel-24-616161.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Media\teams_16px_office_xs.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Media\person_neutral_skin_type_4_16px.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Media\pie_chart_16px.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Media\properties_front_view_16px.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Media\sa01_surp100_print00-1472043550-1944 %281%29.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Media\json_24px.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Media\icons8_exterior_16px.png" />
+    <Resource Include="Media\icons8_house_16px.png" />
+    <Resource Include="Media\icons8_location_16px.png" />
+    <Resource Include="Media\icons8_real_estate_16px.png" />
+    <Resource Include="Media\icons8_upload_link_document_16px.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Media\edit_property_16px.png" />
+    <Resource Include="Media\making_notes_16px.png" />
+    <Resource Include="Media\view_details_16px.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Media\replicate_rows_16px.png" />
+    <Resource Include="Media\replicate_rows_minus_mi_16px.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Media\browse_folder_16px_ss.png" />
+    <Resource Include="Media\copy_16px_ss.png" />
+    <Resource Include="Media\minus_16px_ss.png" />
+    <Resource Include="Media\search_duplicates_mi_16px_ss.png" />
+    <Resource Include="Media\search_property_16px_ss.png" />
+    <Resource Include="Media\view_16px_ss.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Media\search_duplicates_mi_alt2_16px_ss.png" />
+    <Resource Include="Media\search_duplicates_mi_alt_16px_ss.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Media\clear_filters_16px_ss.png" />
+    <Resource Include="Media\database_backup_16px_ss.png" />
+    <Resource Include="Media\filter_16px_ss.png" />
+    <Resource Include="Media\refresh_16px_ss.png" />
+    <Resource Include="Media\reset_16px_ss.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Media\left_16px_ss.png" />
+    <Resource Include="Media\left_arrow_16px_ss.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Media\cut_16px_ss.png" />
+    <Resource Include="Media\file_16px_ss.png" />
+    <Resource Include="Media\logout_16px_ss.png" />
+    <Resource Include="Media\paste_16px_ss.png" />
+    <Resource Include="Media\product_16px_xs.png" />
+    <Resource Include="Media\save_16px_ss.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Media\clothes_16px_ss.png" />
+    <Resource Include="Media\help_16px_office_xs.png" />
+    <Resource Include="Media\help_16px_ss.png" />
+    <Resource Include="Media\info_16px_office_xs.png" />
+    <Resource Include="Media\info_16px_ss.png" />
+    <Resource Include="Media\info_squared_16px_ss.png" />
+    <Resource Include="Media\question_mark_16px_ss.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Media\back_16px_ss.png" />
+    <Resource Include="Media\delete_16px_ss.png" />
+    <Resource Include="Media\remove_16px_ss.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Media\folder_16px_ss.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Media\add_file_80px_office_l.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\packages\MaterialDesignThemes.4.5.0\build\MaterialDesignThemes.targets" Condition="Exists('..\packages\MaterialDesignThemes.4.5.0\build\MaterialDesignThemes.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\MaterialDesignThemes.4.5.0\build\MaterialDesignThemes.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\MaterialDesignThemes.4.5.0\build\MaterialDesignThemes.targets'))" />
+    <Error Condition="!Exists('..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.117.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.117.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets'))" />
+  </Target>
+  <Import Project="..\packages\Selenium.WebDriver.ChromeDriver.103.0.5060.13400\build\Selenium.WebDriver.ChromeDriver.targets" Condition="Exists('..\packages\Selenium.WebDriver.ChromeDriver.103.0.5060.13400\build\Selenium.WebDriver.ChromeDriver.targets')" />
+  <Import Project="..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.117.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets" Condition="Exists('..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.117.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
