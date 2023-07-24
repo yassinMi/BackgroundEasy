@@ -145,40 +145,17 @@ namespace BackgroundEasy.Services
 
 
 
-        private int _RequestsIntervalMs;
-        public int RequestsIntervalMs
-        {
-            set { _RequestsIntervalMs = value; notif(nameof(RequestsIntervalMs)); }
-            get { return _RequestsIntervalMs; }
-        }
+       
 
-
-        private bool _UseRequestsInterval;
-        public bool UseRequestsInterval
-        {
-            set { _UseRequestsInterval = value; notif(nameof(UseRequestsInterval)); }
-            get { return _UseRequestsInterval; }
-        }
+       
 
 
 
-        private string _URLTemplate= @"https://www.onehundred80degrees.com/images/imgLarge/Item{sku}.jpg.jpg";
-        public string URLTemplate
-        {
-            set { _URLTemplate = value; notif(nameof(URLTemplate)); }
-            get { return _URLTemplate; }
-        }
+
+        
 
 
-        private string _HeadersStr;
-        public string HeadersStr
-        {
-            set { _HeadersStr = value; notif(nameof(HeadersStr)); }
-            get { return _HeadersStr; }
-        }
-
-
-        private string _OutputFilenameTemplate=@"{sku}.jpg";
+        private string _OutputFilenameTemplate=@"{ImageName}.jpg";
         public string OutputFilenameTemplate
         {
             set { _OutputFilenameTemplate = value; notif(nameof(OutputFilenameTemplate)); }
@@ -199,14 +176,6 @@ namespace BackgroundEasy.Services
 
 
        
-
-
-        private bool _LastUserShouldCreateSubDirectories=false;
-        public bool LastUserShouldCreateSubDirectories
-        {
-            set { _LastUserShouldCreateSubDirectories = value; notif(nameof(LastUserShouldCreateSubDirectories)); }
-            get { return _LastUserShouldCreateSubDirectories; }
-        }
 
 
 

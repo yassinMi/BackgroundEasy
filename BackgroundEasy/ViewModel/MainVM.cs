@@ -183,21 +183,11 @@ namespace BackgroundEasy.ViewModel
        
 
 
-        private bool _InputCreateSubDirectories = ConfigService.Instance.LastUserShouldCreateSubDirectories;
-        public bool InputCreateSubDirectories
-        {
-            set { _InputCreateSubDirectories = value;
-                notif(nameof(InputCreateSubDirectories));
-                if (!deferUpdateUserConfig)
-                    Config.LastUserShouldCreateSubDirectories = value;
-            }
-            get { return _InputCreateSubDirectories; }
-        }
 
 
 
 
-        private string _InputOutputFilenameTemplateStr="{sku}.jpg";
+        private string _InputOutputFilenameTemplateStr="{ImageName}-bg.png";
         public string InputOutputFilenameTemplateStr
         {
             set { _InputOutputFilenameTemplateStr = value; notif(nameof(InputOutputFilenameTemplateStr)); }
@@ -206,12 +196,7 @@ namespace BackgroundEasy.ViewModel
 
 
 
-        private string _CurrentSkuInputStr;
-        public string CurrentSkuInputStr
-        {
-            set { _CurrentSkuInputStr = value; notif(nameof(CurrentSkuInputStr)); }
-            get { return _CurrentSkuInputStr; }
-        }
+       
 
 
 
@@ -247,7 +232,190 @@ namespace BackgroundEasy.ViewModel
         }
 
 
+
+        private bool _IsImageTabSelected = true;
+        public bool IsImageTabSelected
+        {
+            set { _IsImageTabSelected = value; notif(nameof(IsImageTabSelected));
+                if (value) SelectedTabIx = 0;
+            }
+            get { return _IsImageTabSelected; }
+        }
+
+
+        private bool _IsBrushTabSelected;
+        public bool IsBrushTabSelected
+        {
+            set { _IsBrushTabSelected = value; notif(nameof(IsBrushTabSelected));
+                if (value) SelectedTabIx = 1;
+            }
+            get { return _IsBrushTabSelected; }
+        }
+
+
+        private bool _IsSavedBgTabSelected;
+        public bool IsSavedBgTabSelected
+        {
+            set { _IsSavedBgTabSelected = 
+                    value; notif(nameof(IsSavedBgTabSelected));
+                if (value) SelectedTabIx = 2;
+            }
+            get { return _IsSavedBgTabSelected; }
+        }
+
+
+        private int _SelectedTabIx;
+        public int SelectedTabIx
+        {
+            set { _SelectedTabIx = value;
+                notif(nameof(SelectedTabIx));
+                try
+                {
+                    UpdatePreview();
+
+                }
+                catch (Exception err)
+                {
+
+
+                    MessageBox.Show(err.ToString());
+                }
+
+            }
+            get { return _SelectedTabIx; }
+        }
+
+
+
+
         public event EventHandler AboutWindowOpenRequested;
+
+
+        private System.Windows.Media.Color _ColorPickerValue;
+        public System.Windows.Media.Color ColorPickerValue
+        {
+            set
+            {
+                _ColorPickerValue = value;
+                notif(nameof(ColorPickerValue));
+                ColorPickerBrushValue.Color = GetBrushColor();
+                notif(nameof(ShortStringRep));
+                PushUIToCurrentBackground();
+            }
+            get { return _ColorPickerValue; }
+        }
+        System.Windows.Media.Color GetBrushColor()
+        {
+
+            return new System.Windows.Media.Color()
+            {
+                R = ColorPickerValue.R,
+                G = ColorPickerValue.G,
+                B = ColorPickerValue.B,
+                A = GetAlpha()
+            };
+        }
+        public string ShortStringRep
+        {
+            get
+            {
+                return
+                  "#" + ColorPickerValue.R.ToString("X2") + ColorPickerValue.G.ToString("X2") + ColorPickerValue.B.ToString("X2")
+                  + (ToleranceSliderValue == 0 ? "" : $" ±{(ToleranceSliderValue * 100).ToString("0")}%")
+                    ;
+            }
+        }
+        private double _ToleranceSliderValue;
+        public double ToleranceSliderValue
+        {
+            set
+            {
+                _ToleranceSliderValue = value; notif(nameof(ToleranceSliderValue));
+                ColorPickerBrushValue.Color = GetBrushColor();
+                notif(nameof(ShortStringRep));
+                PushUIToCurrentBackground();
+            }
+            get { return _ToleranceSliderValue; }
+        }
+        private byte GetAlpha()
+        {
+            return (byte)(255 * (1.0 - ToleranceSliderValue));
+        }
+
+
+
+        private string _CuurentBackgroundImagePath;
+        public string CuurentBackgroundImagePath
+        {
+            set { _CuurentBackgroundImagePath = value; notif(nameof(CuurentBackgroundImagePath)); }
+            get { return _CuurentBackgroundImagePath; }
+        }
+
+
+        public System.Windows.Media.SolidColorBrush ColorPickerBrushValue { get; set; } = new System.Windows.Media.SolidColorBrush();
+
+        private Background _CurrentBackground;
+        public Background CurrentBackground
+        {
+            set { _CurrentBackground = value;
+                notif(nameof(CurrentBackground));
+                try
+                {
+                    UpdatePreview();
+                }
+                catch (Exception err)
+                {
+
+                    MessageBox.Show(err.ToString());
+                }
+            }
+            get { return _CurrentBackground; }
+        }
+
+        private void PushUIToCurrentBackground()
+        {
+            CurrentBackground = new Background()
+            {
+                BackgroundColor = System.Drawing.Color.FromArgb(GetAlpha(), ColorPickerValue.R, ColorPickerValue.G, ColorPickerValue.B)
+            
+            };
+        }
+
+        private ImageSource _PreviewImageSource;
+        public ImageSource PreviewImageSource
+        {
+            set { _PreviewImageSource = value; notif(nameof(PreviewImageSource)); }
+            get { return _PreviewImageSource; }
+        }
+
+     
+        System.Windows.Media.Brush MiTransparencyBrush
+        {
+            get; set;
+        } = App.Current.MainWindow.TryFindResource("MiTransparencyTiles") as System.Windows.Media.Brush;
+
+        private void UpdatePreview()
+        {
+            var uri_str = "pack://application:,,,/Media/example-small.png";
+            var packUri = new Uri(uri_str);
+            var exampleImg = new  BitmapImage(new Uri(uri_str));
+            
+            var drawingVisual = new DrawingVisual();
+            var drawingContext = drawingVisual.RenderOpen();
+
+            
+            drawingContext.DrawRectangle(MiTransparencyBrush, null, new Rect(0, 0, exampleImg.Width, exampleImg.Height));
+            drawingContext.DrawRectangle(ColorPickerBrushValue, null, new Rect(0, 0, exampleImg.Width, exampleImg.Height));
+
+            drawingContext.DrawImage(exampleImg, new Rect(0, 0, exampleImg.Width, exampleImg.Height));
+
+            drawingContext.Close();
+            
+            var renderTarget = new RenderTargetBitmap((int)exampleImg.Width, (int)exampleImg.Height, 96, 96, PixelFormats.Default);
+            renderTarget.Render(drawingVisual);
+            PreviewImageSource =  renderTarget;
+
+        }
 
 
         public ICommand AboutCommand { get { return new MICommand(hndlAboutCommand); } }
@@ -289,11 +457,7 @@ namespace BackgroundEasy.ViewModel
             {
                 SettingsVM vm = new SettingsVM();
                 //push config to vm
-                vm.HeadersStr = Config.HeadersStr;
                 vm.OutputFilenameTemplate = Config.OutputFilenameTemplate;
-                vm.RequestsIntervalMs = Config.RequestsIntervalMs;
-                vm.URLTemplate = Config.URLTemplate;
-                vm.UseRequestsInterval = Config.UseRequestsInterval;
 
                 View.SettingsWindow w = new View.SettingsWindow();
                 w.DataContext = vm;
@@ -309,11 +473,7 @@ namespace BackgroundEasy.ViewModel
                 //# if not canceled, push setting from vm to app global variables and local storage 
                 if (vm.Canceled == false)
                 {
-                    Config.HeadersStr = vm.HeadersStr;
                     Config.OutputFilenameTemplate = vm.OutputFilenameTemplate;
-                    Config.RequestsIntervalMs = vm.RequestsIntervalMs;
-                    Config.URLTemplate = vm.URLTemplate;
-                    Config.UseRequestsInterval = vm.UseRequestsInterval;
                 }
 
             }
@@ -389,9 +549,9 @@ namespace BackgroundEasy.ViewModel
                     foreach (var f in files)
                     {
                         var ext = Path.GetExtension(f).ToLower();
-                        string[] expectedExtensiosns = new string[] { ".txt", ".csv", ".json" };
+                        string[] expectedExtensiosns = new string[] { ".png" };
                         if (expectedExtensiosns.Contains(ext)){
-                            hndlAddSkuFromFileCommand_impl(f);
+                            hndlAddImageFromFiles_impl(f);
                         }
                     }
                 }
@@ -403,145 +563,50 @@ namespace BackgroundEasy.ViewModel
             
         }
 
-
-        bool ValidateSku(string str)
+        private void hndlAddImageFromFiles_impl(string f)
         {
-            //currently the olnly rule is not being whitespace
+            Images.Add(f);
+            SH.AddItem(f);
+
+        }
+
+        bool ValidateImagePath(string str)
+        {
+            //currently the olnly rule is ext being png
             return !string.IsNullOrWhiteSpace(str)
-                && !Regex.IsMatch(str, @",| ");
+                && Path.GetExtension(str).Equals(".png", StringComparison.InvariantCultureIgnoreCase);
         }
         /// <summary>
         /// must call<see cref="IsTextMultipleImages(string)"/> before this
         /// </summary>
         /// <param name="text"></param>
         /// <returns></returns>
-        IEnumerable<string> GetMultipleImagesFromText(string text)
+        IEnumerable<string> GetImagesFromFolder(string dir)
         {
-            using (var reader = new StringReader(text))
-            {
-                string line;
-                while ((line = reader.ReadLine()) != null)
-                {
-                    line = line.Trim();
-                    if (ValidateSku(line))
-                    yield return line;
-                }
-            }
+            throw new NotImplementedException();
         }
-        bool IsTextMultipleImages(string text)
-        {
-            return text!=null&&text.Contains('\n');
-        }
+       
 
-        public ICommand AddSkuFromTextInputCommand { get { return new MICommand(hndlAddSkuFromTextInputCommand, canExecuteAddSkuFromTextInputCommand); } }
-
-        private bool canExecuteAddSkuFromTextInputCommand()
-        {
-            return IsTextMultipleImages(CurrentSkuInputStr)|| ValidateSku( CurrentSkuInputStr?.Trim());
-        }
+       
 
 
-        private void hndlAddSkuFromTextInputCommand()
-        {
-            try
-            {
-                var str = CurrentSkuInputStr.Trim();
-
-                if (IsTextMultipleImages(str))
-                {
-                    var images = GetMultipleImagesFromText(str);
-                    var total = Images.Count();
-                    if (total == 0) throw new InvalidUserOperationException("no valid Images");
-                    var addedCount = SH.AddItems(images);
-                    Images.Clear();
-                    foreach (var s in SH.GetItems())
-                    {
-                        Images.Add(s);
-                    }
-                    var dupCc = total - addedCount;
-                    Message($"Added: {addedCount}"+(dupCc>0? $", ignored duplicates: {total- addedCount} ":""));
-                    
-                }
-                else
-                {
-                    var addede = SH.AddItem(str);
-                    if (addede)
-                    {
-                        Images.Add(str);
-                        Message("Added SKU");
-                    }
-                    else
-                    {
-                        Message("SKU already exists");
-                    }
-                }
-
-                CurrentSkuInputStr = null;
-            }
-            catch (Exception err)
-            {
-                ReportErr(err);
-            }
-            
-        }
+        
 
 
 
 
-        void hndlAddSkuFromFileCommand_impl(string f)
-        {
-            var ext = Path.GetExtension(f);
-            if (!ext.Equals(".txt", StringComparison.InvariantCultureIgnoreCase))
-            {
-                throw new InvalidUserOperationException($"{ext} files are not supporte yet.");
-            }
-
-            var rawFileText = File.ReadAllText(f);
-            var images = GetMultipleImagesFromText(rawFileText);
-            var total = images.Count();
-            if (total == 0) throw new InvalidUserOperationException($"no valid Images in file '{f}'");
-            var addedCount = SH.AddItems(images);
-            Images.Clear();
-            foreach (var s in SH.GetItems())
-            {
-                Images.Add(s);
-            }
-
-            Message($"Added: {addedCount}, already exist:{total - addedCount} ");
-        }
 
 
-        public ICommand AddSkuFromFileCommand { get { return new MICommand(hndlAddSkuFromFileCommand, canExecuteAddSkuFromFileCommand); } }
 
-        private bool canExecuteAddSkuFromFileCommand()
+
+        public ICommand StartProcessingCommand { get { return new MICommand(hndlStartProcessingCommand, canStartProcessingCommand); } }
+
+        private bool canStartProcessingCommand()
         {
             return true;
         }
 
-        private void hndlAddSkuFromFileCommand()
-        {
-            try
-            {
-                var f = IOUtils.PromptOpeningPath(".txt", "Open Images list", "Text Files|*.txt|All Files|*.*");
-                if (f == "") return;
-                hndlAddSkuFromFileCommand_impl(f);
-            }
-            catch (Exception err)
-            {
-                ReportErr(err);
-            }
-            
-        }
-
-
-        public ICommand StartScrapingCommand { get { return new MICommand(hndlStartScrapingCommand, canExecuteStartScrapingCommand); } }
-
-        private bool canExecuteStartScrapingCommand()
-        {
-            return true;
-        }
-
-        private void hndlStartScrapingCommand()
+        private void hndlStartProcessingCommand()
         {
             try
             {
@@ -550,9 +615,8 @@ namespace BackgroundEasy.ViewModel
                 string[] targetImages = SH.GetItems().ToArray();
                 string outputFolder = CurrentInputDestinationFolder;
                 bool shouldSkipExisting = InputShouldSkipExisting;
-                string urlTemplate = Config.URLTemplate?.Replace("{SKU}", "{sku}");
                 string outputTemplate = Config.OutputFilenameTemplate?.Replace("{SKU}", "{sku}");
-                string headersStr = Config.HeadersStr;
+                
                 //# validate app task input
 
 
@@ -573,31 +637,24 @@ namespace BackgroundEasy.ViewModel
                 {
                     throw new InvalidUserOperationException("Please specify a Filename Template at settings screen");
                 }
-                if (string.IsNullOrWhiteSpace(urlTemplate))
-                {
-                    throw new InvalidUserOperationException("Please specify a URL Template at settings screen");
-                }
                 
-                if (!outputTemplate.Contains("{sku}"))
+                
+                if (!outputTemplate.Contains("{ImageName}"))
                 {
-                    throw new InvalidUserOperationException("Output Filename Template must contain {sku}");
+                    throw new InvalidUserOperationException("Output Filename Template must contain {ImageName}");
                 }
-                if (!urlTemplate.Contains("{sku}"))
+                if(IsImageTabSelected&&!File.Exists(CuurentBackgroundImagePath))
                 {
-                    throw new InvalidUserOperationException("URL Template must contain {sku}");
+                    throw new InvalidUserOperationException("Please specify the image to use as background");
+                }
+                if (IsSavedBgTabSelected )
+                {
+                    throw new InvalidUserOperationException("no background preset selected");
                 }
 
-                //# try set the cstom headers
+
                 ScrapingHelper scHelp = new ScrapingHelper();
-                try
-                {
-                    scHelp.ConfigureCustomHeaders(headersStr);
-                }
-                catch (Exception err)
-                {
-
-                    throw new InvalidUserOperationException($"Error parsing custom headers: {err.Message}");
-                }
+               
 
                 //# execute app task
                 CancellationTokenSource cts = new CancellationTokenSource();
@@ -628,14 +685,12 @@ namespace BackgroundEasy.ViewModel
 
 
                         //# create tas
-                        ScrapingOptions opts = new ScrapingOptions()
+                        ProcessingOptions opts = new ProcessingOptions()
                         {
-                            RequestsDelayMs = Config.UseRequestsInterval == false ? (int?)null : Config.RequestsIntervalMs,
-                            DumpDir = (InputCreateSubDirectories&&false) ? outputFolder + "\\" + CoreUtils.SanitizeFileName("example source") : outputFolder ,
+                            DumpDir = outputFolder,
                             SkipExisting = shouldSkipExisting,
                             OutputFilenameTemplate = outputTemplate,
-                            UrlTemplate = urlTemplate
-
+                            Background = CurrentBackground
 
                         };
                         Directory.CreateDirectory(opts.DumpDir);

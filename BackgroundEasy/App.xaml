@@ -53,9 +53,20 @@
             <SolidColorBrush x:Key="PaletteWhite" Color="#FFF1F1EF"/>
             <SolidColorBrush x:Key="PaletteLightGreen" Color="#FFC7DAD4"/>
             <SolidColorBrush x:Key="MiGrayStatusBarBorderBrush" Color="#FFB2B2B2"/>
-        
 
-           
+
+
+            <DrawingBrush x:Key="MiTransparencyTiles"  Viewbox="0,0,10,10" Viewport="0,0,16,16" ViewportUnits="Absolute" ViewboxUnits="Absolute" TileMode="Tile" Stretch="Uniform">
+                <DrawingBrush.Drawing>
+                    <DrawingGroup>
+                        <GeometryDrawing Brush="Gainsboro" Geometry="M0,0L0,5 5,5 5,0z"/>
+                        <GeometryDrawing Brush="Gainsboro" Geometry="M5,5L5,10 10,10 10,5z"/>
+                        <GeometryDrawing Brush="White" Geometry="M0,5L5,5 5,10 0,10z"/>
+                        <GeometryDrawing Brush="White" Geometry="M5,0L10,0 10,5 5,5z"/>
+                    </DrawingGroup>
+                </DrawingBrush.Drawing>
+            </DrawingBrush>
+
 
             <Style x:Key="WisImportBut" TargetType="Button" BasedOn="{StaticResource MaterialDesignFlatMidBgButton}" >
                 <Setter Property="Height" Value="30"/>
@@ -117,7 +128,7 @@
 
 
             <Style x:Key="MiCancellationActionButtonStyle"  BasedOn="{StaticResource MaterialDesignOutlinedButton}" TargetType="Button">
-                <Setter Property="Background" Value="#FFEAEAEA" />
+                <Setter Property="Background" Value="#FFfcfcfc" />
                 <Setter Property="BorderBrush" Value="#FFD6D6D6" />
                 <Setter Property="materialDesign:ButtonAssist.CornerRadius" Value="7" />
                 <Setter Property="Height" Value="30" />

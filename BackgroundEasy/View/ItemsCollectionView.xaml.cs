@@ -67,10 +67,8 @@ namespace BackgroundEasy.View
             {
 
                 var files = (string[])e.Data.GetData(DataFormats.FileDrop);
-                var csv = files.Where(f => System.IO.Path.GetExtension(f).ToLower() == ".csv");
-                var txt = files.Where(f => System.IO.Path.GetExtension(f).ToLower() == ".txt");
-                var json = files.Where(f => System.IO.Path.GetExtension(f).ToLower() == ".json");
-                var allowed_extensions_cc = csv.Count()+txt.Count()+json.Count();
+                var png = files.Where(f => System.IO.Path.GetExtension(f).ToLower() == ".png");
+                var allowed_extensions_cc = png.Count();
                 if (allowed_extensions_cc > 0)
                 {
 

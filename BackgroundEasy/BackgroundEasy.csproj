@@ -389,6 +389,12 @@
   <ItemGroup>
     <Resource Include="Media\add_file_80px_office_l.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Media\example.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Media\example-small.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\MaterialDesignThemes.4.5.0\build\MaterialDesignThemes.targets" Condition="Exists('..\packages\MaterialDesignThemes.4.5.0\build\MaterialDesignThemes.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
