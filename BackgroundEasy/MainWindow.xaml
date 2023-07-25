@@ -602,7 +602,15 @@
 
                                         <Border Width="80" Height="80" Margin="8" Background="{StaticResource MiTransparencyTiles}">
 
-                                            <Image Source="Media/add_file_80px_office_l.png"/>
+                                            <Grid>
+                                                <Image Source="{Binding CurrentBgImgImageSource, Mode=OneWay}"/>
+                                                <Button VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource MaterialDesignIconButton}"  Background="#66C3C3C3" Command="{Binding SelectBgImageCommand}">
+                                                    <custom:PackIconMaterial Kind="ImageEdit" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#FF1A75B5"/>
+
+                                                </Button>
+                                            </Grid>
+                                            
+                                           
 
                                         </Border>
 

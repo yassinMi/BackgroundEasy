@@ -197,6 +197,22 @@ namespace BackgroundEasy.Services
         }
 
 
+        private System.Windows.Media.Color _LastUserColorPickerValue = System.Windows.Media.Colors.LightSeaGreen;
+        public System.Windows.Media.Color LastUserColorPickerValue
+        {
+            set { _LastUserColorPickerValue = value; notif(nameof(LastUserColorPickerValue)); }
+            get { return _LastUserColorPickerValue; }
+        }
+
+
+
+
+        private double _LastUserToleranceSliderValue = 0;
+        public double LastUserToleranceSliderValue
+        {
+            set { _LastUserToleranceSliderValue = value; notif(nameof(LastUserToleranceSliderValue)); }
+            get { return _LastUserToleranceSliderValue; }
+        }
 
 
 

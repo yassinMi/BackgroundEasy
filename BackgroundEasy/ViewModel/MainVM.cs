@@ -54,6 +54,9 @@ namespace BackgroundEasy.ViewModel
                 PresetsVMS.Add(pvm);
                 SubPresetVMEvents(pvm);
             }
+            //draw preview
+            ColorPickerBrushValue.Color = GetBrushColor();
+            PushUIToCurrentBackground();
             Images.CollectionChanged += (s, e) => { notif(nameof(IsEmptyStateVisible)); };
             IsImageTabSelected = true;
         }
@@ -249,7 +252,8 @@ namespace BackgroundEasy.ViewModel
         private bool _IsImageTabSelected = true;
         public bool IsImageTabSelected
         {
-            set { _IsImageTabSelected = value; notif(nameof(IsImageTabSelected));
+            set { _IsImageTabSelected = value;
+                notif(nameof(IsImageTabSelected));
                 if (value) SelectedTabIx = 0;
             }
             get { return _IsImageTabSelected; }
@@ -259,7 +263,8 @@ namespace BackgroundEasy.ViewModel
         private bool _IsBrushTabSelected;
         public bool IsBrushTabSelected
         {
-            set { _IsBrushTabSelected = value; notif(nameof(IsBrushTabSelected));
+            set { _IsBrushTabSelected = value;
+                notif(nameof(IsBrushTabSelected));
                 if (value) SelectedTabIx = 1;
             }
             get { return _IsBrushTabSelected; }
@@ -284,8 +289,8 @@ namespace BackgroundEasy.ViewModel
                 notif(nameof(SelectedTabIx));
                 try
                 {
-                    UpdatePreview();
-
+                    PushUIToCurrentBackground();
+                    //Message("push");
                 }
                 catch (Exception err)
                 {
@@ -304,7 +309,7 @@ namespace BackgroundEasy.ViewModel
         public event EventHandler AboutWindowOpenRequested;
 
 
-        private System.Windows.Media.Color _ColorPickerValue;
+        private System.Windows.Media.Color _ColorPickerValue=ConfigService.Instance.LastUserColorPickerValue;
         public System.Windows.Media.Color ColorPickerValue
         {
             set
@@ -313,13 +318,14 @@ namespace BackgroundEasy.ViewModel
                 notif(nameof(ColorPickerValue));
                 ColorPickerBrushValue.Color = GetBrushColor();
                 notif(nameof(ShortStringRep));
+                if (!deferUpdateUserConfig)
+                    Config.LastUserColorPickerValue = value;
                 PushUIToCurrentBackground();
             }
             get { return _ColorPickerValue; }
         }
         System.Windows.Media.Color GetBrushColor()
         {
-
             return new System.Windows.Media.Color()
             {
                 R = ColorPickerValue.R,
@@ -338,7 +344,7 @@ namespace BackgroundEasy.ViewModel
                     ;
             }
         }
-        private double _ToleranceSliderValue;
+        private double _ToleranceSliderValue= ConfigService.Instance.LastUserToleranceSliderValue;
         public double ToleranceSliderValue
         {
             set
@@ -346,6 +352,8 @@ namespace BackgroundEasy.ViewModel
                 _ToleranceSliderValue = value; notif(nameof(ToleranceSliderValue));
                 ColorPickerBrushValue.Color = GetBrushColor();
                 notif(nameof(ShortStringRep));
+                if (!deferUpdateUserConfig)
+                    Config.LastUserToleranceSliderValue = value;
                 PushUIToCurrentBackground();
             }
             get { return _ToleranceSliderValue; }
@@ -364,11 +372,30 @@ namespace BackgroundEasy.ViewModel
                 notif(nameof(CuurentBackgroundImagePath));
                 if (!deferUpdateUserConfig)
                     Config.LastUserBackgroundImagePath = value;
+                PushUIToCurrentBackground();
+                notif(nameof(CurrentBgImgImageSource));
             }
             get { return _CuurentBackgroundImagePath; }
         }
 
-       
+
+
+        public ImageSource CurrentBgImgImageSource
+        {
+            get
+            {
+                try
+                {
+                    return new BitmapImage(new Uri(CuurentBackgroundImagePath));
+                }
+                catch (Exception)
+                {
+
+                    return null;
+                }
+            }
+        }
+
 
 
 
@@ -397,7 +424,7 @@ namespace BackgroundEasy.ViewModel
             CurrentBackground = new Background()
             {
                 BackgroundColor = System.Drawing.Color.FromArgb(GetAlpha(), ColorPickerValue.R, ColorPickerValue.G, ColorPickerValue.B)
-            
+                
             };
         }
 
@@ -425,7 +452,20 @@ namespace BackgroundEasy.ViewModel
 
             
             drawingContext.DrawRectangle(MiTransparencyBrush, null, new Rect(0, 0, exampleImg.PixelWidth, exampleImg.PixelHeight));
-            drawingContext.DrawRectangle(ColorPickerBrushValue, null, new Rect(0, 0, exampleImg.PixelWidth, exampleImg.PixelHeight));
+            //Message($"{IsImageTabSelected} {IsBrushTabSelected}");
+            if (SelectedTabIx==0)
+            {
+                if (CuurentBackgroundImagePath != null)
+                {
+                    var bgImg = new BitmapImage(new Uri(CuurentBackgroundImagePath));
+                    drawingContext.DrawImage(bgImg, new Rect(0, 0, exampleImg.PixelWidth, exampleImg.PixelHeight));
+                }
+            }
+            else if(SelectedTabIx==1)
+            {
+                SolidColorBrush b = ColorPickerBrushValue;
+                drawingContext.DrawRectangle(b , null, new Rect(0, 0, exampleImg.PixelWidth, exampleImg.PixelHeight));
+            }
 
             drawingContext.DrawImage(exampleImg, new Rect(0, 0, exampleImg.PixelWidth, exampleImg.PixelHeight));
 
