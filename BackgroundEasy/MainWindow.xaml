@@ -345,6 +345,12 @@
                         <Image Width="16" Height="16" Source="Media/file_16px_ss.png" />
                     </MenuItem.Icon>
                 </MenuItem>
+                <MenuItem Header="_Save Background As..." Command="{Binding SaveCurrentBackgroundAsPresetCommand}" >
+                    <MenuItem.Icon>
+                        <Image Width="16" Height="16" Source="Media/save_16px_ss.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+
                 <!--MenuItem Command="{Binding ExportAllPropertiesExcel}" HeaderStringFormat="Save {0:P} (All)" Header="{Binding  Source={x:Static MiCommon:ApplicationInfo.UIN_PRIMARY},Mode=OneTime}" >
                     <MenuItem.Icon>
                         <Image Width="16" Height="16" Source="Media/save_16px_ss.png" />
@@ -471,18 +477,23 @@
 
             <Grid x:Name="setupScreen" Visibility="{Binding IsSetupScreenVisible,Converter={StaticResource BooleanToVisibilityConverter}}" >
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
                     <RowDefinition MinHeight="80" Height="*" />
                     <RowDefinition Height="auto"/>
+
                 </Grid.RowDefinitions>
-                <View:ItemsCollectionView></View:ItemsCollectionView>
-                <Grid x:Name="options_section" Grid.Row="1" >
+                <View:ItemsCollectionView Grid.Row="1"></View:ItemsCollectionView>
+                <StackPanel HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,16,16,34" Grid.Row="2" Orientation="Horizontal">
+                    <Button Style="{StaticResource WisImportBut}" Command="{Binding StartProcessingCommand}"  Content="Apply Background" />
+                </StackPanel>
+                <Grid x:Name="options_section" Grid.Row="0" >
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
                     <Grid  x:Name="options_content">
                         <StackPanel Grid.IsSharedSizeScope="True">
-                            
+
                             <TextBlock Margin="8,8,8,6" Foreground="#FF979797" Text="Background:" Style="{StaticResource MaterialDesignSubtitle2TextBlock}" />
 
                             <Grid >
@@ -519,7 +530,7 @@
                                                     </Setter.Value>
                                                 </Setter>
                                             </Style>
-                                            </StackPanel.Resources>
+                                        </StackPanel.Resources>
                                         <RadioButton GroupName="BgType" Style="{StaticResource TabLikeOpacityAndBorderRadioButtonStyle}" IsChecked="{Binding IsImageTabSelected,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
                                             <Grid >
                                                 <Grid.ColumnDefinitions>
@@ -576,9 +587,9 @@
 
                                         </RadioButton>
 
-                                         
-                                        
-                                          
+
+
+
 
 
                                     </StackPanel>
@@ -601,8 +612,8 @@
                                                     <ColumnDefinition Width="*" />
                                                     <ColumnDefinition Width="auto" />
                                                 </Grid.ColumnDefinitions>
-                                                <TextBox VerticalAlignment="Center"  materialDesign:TextFieldAssist.HasClearButton="True" materialDesign:HintAssist.IsFloating="False"  materialDesign:TextFieldAssist.TextFieldCornerRadius="0" Style="{DynamicResource MaterialDesignOutlinedTextBox}" Margin="8,0" Padding="4,4" Text="{Binding CurrentInputDestinationFolder, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                                                <Button VerticalAlignment="Center" HorizontalAlignment="Right" Height="24" Width="24" Grid.Column="1"  Style="{StaticResource MaterialDesignIconButton}"  Command="{Binding DataContext.DestinationFolderCommand, ElementName=window, Mode=OneWay}" ToolTip="Choose a folder" Margin="0 0 8 0" >
+                                                <TextBox VerticalAlignment="Center"  materialDesign:TextFieldAssist.HasClearButton="True" materialDesign:HintAssist.IsFloating="False"  materialDesign:TextFieldAssist.TextFieldCornerRadius="0" Style="{DynamicResource MaterialDesignOutlinedTextBox}" Margin="8,0" Padding="4,4" Text="{Binding CuurentBackgroundImagePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                                <Button VerticalAlignment="Center" HorizontalAlignment="Right" Height="24" Width="24" Grid.Column="1"  Style="{StaticResource MaterialDesignIconButton}"  Command="{Binding SelectBgImageCommand}" ToolTip="Choose an image" Margin="0 0 8 0" >
                                                     <Image VerticalAlignment="Center" HorizontalAlignment="Center" Height="16" Width="16" Source="Media/folder_16px_ss.png" />
                                                 </Button>
 
@@ -621,13 +632,35 @@
 
                                     </Grid>
                                     <Grid x:Name="saved_sect" Visibility="{Binding IsSavedBgTabSelected, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                        <ItemsControl Background="White" Height="80">
-                                            
-                                        </ItemsControl>
+                                        <ListView Style="{x:Null}" ItemsSource="{Binding PresetsVMS}" Background="White" Height="120" BorderThickness="1" BorderBrush="#cccccc" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Margin="8 30 8 8" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                                            <ListView.ItemContainerStyle>
+                                                <Style TargetType="ListViewItem">
+                                                    <Setter Property="Template">
+                                                        <Setter.Value>
+                                                            <ControlTemplate TargetType="ListViewItem">
+                                                                <ContentPresenter/>
+                                                            </ControlTemplate>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </Style>
+                                            </ListView.ItemContainerStyle>
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <View:PresetView DataContext="{Binding}"/>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <WrapPanel></WrapPanel>
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+
+                                        </ListView>
+                                       
                                     </Grid>
 
                                 </StackPanel>
-                                <Grid  Grid.Column="1" x:Name="previewer" HorizontalAlignment="Right" Width="200" Height="200">
+                                <Grid  Grid.Column="1" x:Name="previewer" HorizontalAlignment="Right" Width="200" Height="200" VerticalAlignment="Top">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="auto"/>
                                         <RowDefinition Height="*"/>
@@ -667,9 +700,6 @@
                             <CheckBox  Margin="8,8,8,4" IsChecked="{Binding InputShouldSkipExisting}" Content="Skip existing images"/>
                         </StackPanel>
                     </Grid>
-                    <StackPanel HorizontalAlignment="Right" VerticalAlignment="Center" Margin="16 16" Grid.Row="1" Orientation="Horizontal">
-                        <Button Style="{StaticResource WisImportBut}" Command="{Binding StartProcessingCommand}"  Content="Apply Background" />
-                    </StackPanel>
 
                 </Grid>
             </Grid>

@@ -117,7 +117,13 @@ namespace BackgroundEasy
         private void hndlUnhandeledExceptions(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
             CoreUtils.WriteLine($"[{DateTime.Now}] app unhandeled exception:  {e.Exception}");
-            MessageBox.Show($"DispatcherUnhandledException:{Environment.NewLine}{Environment.NewLine}{e.Exception.Message}", ApplicationInfo.APP_TITLE, MessageBoxButton.OK, MessageBoxImage.Error);
+#if DEBUG
+            MessageBox.Show($"DispatcherUnhandledException:{Environment.NewLine}{Environment.NewLine}{e.Exception.ToString()}", ApplicationInfo.APP_TITLE, MessageBoxButton.OK, MessageBoxImage.Error);
+
+#else
+           MessageBox.Show($"DispatcherUnhandledException:{Environment.NewLine}{Environment.NewLine}{e.Exception.Message}", ApplicationInfo.APP_TITLE, MessageBoxButton.OK, MessageBoxImage.Error);
+#endif
+
             e.Handled = true;
             Shutdown();
 

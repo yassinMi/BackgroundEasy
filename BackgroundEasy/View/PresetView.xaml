@@ -1,0 +1,39 @@
+﻿<UserControl x:Class="BackgroundEasy.View.PresetView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:MiCommon="clr-namespace:Mi.Common"
+        xmlns:local="clr-namespace:BackgroundEasy.View"
+    xmlns:mi="clr-namespace:Mi.Common" 
+        xmlns:custom="http://metro.mahapps.com/winfx/xaml/iconpacks"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+         xmlns:ViewModel="clr-namespace:BackgroundEasy.ViewModel" 
+             xmlns:Converters="clr-namespace:BackgroundEasy.Converters"
+        xmlns:View="clr-namespace:BackgroundEasy.View" 
+    xmlns:AttachedMi="clr-namespace:Mi.Attached"
+    xmlns:AttachedComMi="clr-namespace:Mi.Common.Attached"
+    xmlns:Converters1="clr-namespace:Converters"
+             materialDesign:ThemeAssist.Theme="Light"
+        Foreground="{DynamicResource MaterialDesignBody}"
+             Background="Transparent"
+             mc:Ignorable="d" 
+             d:DesignHeight="32.966" d:DesignWidth="135.916"
+             AttachedMi:DropFilesAtachedProperties.DropFilesKey="importDropOnImagesCollectionView"
+             d:DataContext="{d:DesignInstance {x:Type ViewModel:PresetVM}, IsDesignTimeCreatable=True}" SnapsToDevicePixels="True" UseLayoutRounding="True" TextOptions.TextFormattingMode="Display" Height="38" Width="100" Margin="4"
+             >
+    <UserControl.Resources>
+        <Converters1:BooleanToVisibilityInverted x:Key="BooleanToVisibilityInverted"/>
+    </UserControl.Resources>
+    <materialDesign:ColorZone VerticalAlignment="Stretch" BorderBrush="#FFACACAC" BorderThickness="1" x:Name="Images_section" Grid.Column="0" Background="White" >
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="48"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Image Margin="4" Source="{Binding ThumbImageSource}" Width="30" Height="30"/>
+            <TextBlock Margin="8" Grid.Column="1" VerticalAlignment="Center"  Text="{Binding  Name}" TextTrimming="CharacterEllipsis"/>
+        </Grid>
+    </materialDesign:ColorZone>
+
+</UserControl>

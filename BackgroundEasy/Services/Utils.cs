@@ -18,6 +18,7 @@ using Mi.Common;
 using System.Reflection;
 //using OfficeOpenXml;
 using System.Windows.Media;
+using System.Drawing;
 
 namespace BackgroundEasy.Services
 {
@@ -27,6 +28,68 @@ namespace BackgroundEasy.Services
     /// </summary>
     public static class Utils
     {
+
+        /// <summary>
+        /// compute the next name for a collection with a numbered naming patteren, eg "myFile - copy(1)" "myFile - copy(2)"
+        /// </summary>
+        /// <param name="colection">the existig collection, if null or empty the first ame will be constructed</param>
+        /// <param name="decode">extract number from an object from the collections. it is safe to throw exceptions, they will be igored</param>
+        /// <param name="encode">convert the resulling number to the name to be returned, this must ot throw excepions</param>
+        /// <param name="firstIx">0 or 1</param>
+        public static string GetNextNumberedName<T>(IEnumerable<T> colection, Func<T, int> decode, Func<int, string> encode, int firstIx = 0)
+        {
+
+            int nextIx = firstIx;
+            if (colection == null || !colection.Any()) return encode(nextIx);
+            foreach (var item in colection)
+            {
+                try
+                {
+                    int ix = decode(item);
+                    nextIx = ix + 1;
+                }
+                catch (Exception)
+                {
+                }
+            }
+            return encode(nextIx);
+        }
+
+        public static System.Drawing.Color DrawingColorFromMediaColor(System.Windows.Media.Color c)
+        {
+            return System.Drawing.Color.FromArgb(c.A, c.R, c.G, c.B);
+        }
+        public static System.Windows.Media.Color MediaColorFromDrawingColor(System.Drawing.Color c)
+        {
+            return  System.Windows.Media.Color.FromArgb(c.A, c.R, c.G, c.B);
+        }
+
+        /// <summary>
+        /// compute the next name for a collection with a numbered naming patteren, eg "myFile - copy(1)" "myFile - copy(2)"
+        /// </summary>
+        /// <param name="colection">the existig collection of names, if null or empty the first ame will be constructed</param>
+        /// <param name="prefix"> eg: "myFile - copy_" to acheieve the pattern: "myFile - copy_1" "myFile - copy_2"
+        /// <param name="firstIx">0 or 1</param>
+        public static string GetNextNumberedName(IEnumerable<string> colection, string prefix, int firstIx = 0)
+        {
+
+            int nextIx = firstIx;
+            if (colection == null || !colection.Any()) return prefix + (nextIx.ToString());
+            foreach (var item in colection)
+            {
+                try
+                {
+                    if (!item.StartsWith(prefix)) continue;
+                    int ix = int.Parse(item.Substring(prefix.Length));
+                    nextIx = ix + 1;
+                }
+                catch (Exception)
+                {
+                }
+            }
+            return prefix + (nextIx.ToString());
+        }
+
 
         /// <summary>
         /// returns default local chromuim location chromium\win64-{982053}\chrome-win\chrome.exe 

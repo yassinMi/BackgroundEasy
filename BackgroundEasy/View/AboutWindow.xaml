@@ -49,6 +49,14 @@
                 <TextBlock Margin="6 0" VerticalAlignment="Center" Text="Developer" />
                 <TextBlock Text="{Binding Source={x:Static common:ApplicationInfo.APP_DEVELOPER_EMAIL}, Mode=OneWay}"  VerticalAlignment="Center" Margin="6 0"  Grid.Column="1" />
             </Grid>
+            <Grid Margin="6 " Visibility="Visible">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition SharedSizeGroup="key" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Margin="6 0" VerticalAlignment="Center" Text="Graphics" />
+                <TextBlock Text="mbou7841@gmail.com"  VerticalAlignment="Center" Margin="6 0"  Grid.Column="1" />
+            </Grid>
         </StackPanel>
         <Grid Margin="0,8,0,0" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.RowSpan="3">
             <Image Source="/BackgroundEasy;component/Media/128.png" HorizontalAlignment="Right" VerticalAlignment="Top" Width="64" Height="64" Margin="0,8,18,0"></Image>

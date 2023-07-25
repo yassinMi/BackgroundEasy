@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BackgroundEasy.Model;
+using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Linq;
@@ -25,6 +26,10 @@ namespace BackgroundEasy.Services
             using (var command = new SQLiteCommand("create table IF NOT EXISTS Items (Id INTEGER PRIMARY KEY AUTOINCREMENT, SKU TEXT Unique )", Connection))
             {
                 command.ExecuteNonQuery();
+            }
+            using (var command2 = new SQLiteCommand(@" CREATE TABLE IF NOT EXISTS Presets ( Id INTEGER PRIMARY KEY AUTOINCREMENT, ImagePath TEXT, SolidColorHex TEXT, Name TEXT UNIQUE )", Connection))
+            {
+                command2.ExecuteNonQuery();
             }
         }
 
@@ -108,7 +113,7 @@ namespace BackgroundEasy.Services
             }
 
             return items;
-        }
+        } 
 
         public int GetItemsCount()
         {
@@ -118,6 +123,93 @@ namespace BackgroundEasy.Services
                 return count;
             }
         }
+
+
+
+        #region presets
+
+
+        public void AddPreset(Preset preset)
+        {
+           
+                using (var transaction = Connection.BeginTransaction())
+                {
+                    using (var command = new SQLiteCommand("INSERT INTO Presets (ImagePath, SolidColorHex, Name) VALUES (@imagePath, @solidColorHex, @name)", Connection))
+                    {
+                        command.Parameters.AddWithValue("@imagePath", preset.ImagePath);
+                        command.Parameters.AddWithValue("@solidColorHex", preset.SolidColorHex);
+                        command.Parameters.AddWithValue("@name", preset.Name);
+                        command.ExecuteNonQuery();
+                    }
+
+                    transaction.Commit();
+                }
+            
+        }
+
+        public IEnumerable<Preset> GetPresets()
+        {
+            var presets = new List<Preset>();
+
+          
+                using (var command = new SQLiteCommand("SELECT ImagePath, SolidColorHex, Name FROM Presets", Connection))
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        string imagePath = reader.IsDBNull(0)? null : reader.GetString(0);
+                        string solidColorHex = reader.IsDBNull(1) ? null : reader.GetString(1);
+                        string name = reader.GetString(2);
+
+                        var preset = new Preset
+                        {
+                            ImagePath = imagePath,
+                            SolidColorHex = solidColorHex,
+                            Name = name
+                        };
+
+                        presets.Add(preset);
+                    }
+                }
+            
+
+            return presets;
+        }
+
+        public void UpdatePreset(Preset preset)
+        {
+            
+
+                using (var transaction = Connection.BeginTransaction())
+                {
+                    using (var command = new SQLiteCommand("UPDATE Presets SET ImagePath = @imagePath, SolidColorHex = @solidColorHex WHERE Name = @name", Connection))
+                    {
+                        command.Parameters.AddWithValue("@imagePath", preset.ImagePath);
+                        command.Parameters.AddWithValue("@solidColorHex", preset.SolidColorHex);
+                        command.Parameters.AddWithValue("@name", preset.Name);
+                        command.ExecuteNonQuery();
+                    }
+
+                    transaction.Commit();
+                }
+            
+        }
+
+        public void DeletePreset(string presetName)
+        {
+            using (var transaction = Connection.BeginTransaction())
+            {
+                using (var command = new SQLiteCommand("DELETE FROM Presets WHERE Name = @name", Connection))
+                {
+                    command.Parameters.AddWithValue("@name", presetName);
+                    command.ExecuteNonQuery();
+                }
+
+                transaction.Commit();
+            }
+        }
+
+        #endregion presets
 
     }
 }

@@ -167,6 +167,16 @@ namespace BackgroundEasy.Services
         //last user task input 
 
 
+
+
+        private string _LastUserBackgroundImagePath;
+        public string LastUserBackgroundImagePath
+        {
+            set { _LastUserBackgroundImagePath = value; notif(nameof(LastUserBackgroundImagePath)); }
+            get { return _LastUserBackgroundImagePath; }
+        }
+
+
         private string _LastUserOutputDirectory = null;
         public string LastUserOutputDirectory
         {
