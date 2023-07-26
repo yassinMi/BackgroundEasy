@@ -38,6 +38,15 @@ namespace BackgroundEasy.ViewModel
 
             string connectionString = $"Data Source={ApplicationInfo.DATABASE_FILE};Version=3;";
             SH = new StorageHelper(connectionString);
+            SH.PresetUpdated += (s, e) =>
+            {
+                var affectedVm = PresetsVMS.FirstOrDefault(p => p.Model.Name == e.Name);
+                if (affectedVm != null)
+                {
+                    affectedVm.Model = e;
+                }
+            };
+            ProcessingHelper = new ScrapingHelper();
             //var str = string.Join("\n", Enumerable.Range(0, 900).Select(s => s.ToString()));
             //CurrentSkuInputStr = str;
             //AddSkuFromTextInputCommand.Execute(null);
@@ -50,11 +59,11 @@ namespace BackgroundEasy.ViewModel
             //# loead presets
             foreach (var p in SH.GetPresets())
             {
-                var pvm = new PresetVM(p, this);
-                PresetsVMS.Add(pvm);
-                SubPresetVMEvents(pvm);
+
+                OnAddPreset(p);
             }
             //draw preview
+            UpdateCurrentPreviewImage();
             ColorPickerBrushValue.Color = GetBrushColor();
             PushUIToCurrentBackground();
             Images.CollectionChanged += (s, e) => { notif(nameof(IsEmptyStateVisible)); };
@@ -63,7 +72,16 @@ namespace BackgroundEasy.ViewModel
 
         private void SubPresetVMEvents(PresetVM p)
         {
+            p.SelectRequest += h_PresetVM_SelectRequest;
+        }
 
+        private void h_PresetVM_SelectRequest(object sender, EventArgs e)
+        {
+            PresetVM pvm = sender as PresetVM;
+            if(CurrentSelectedPresetVM!= pvm)
+            {
+                MakeSelected(pvm);
+            }
         }
 
         StorageHelper SH { get; set; }
@@ -132,6 +150,13 @@ namespace BackgroundEasy.ViewModel
         public ObservableCollection<string> Images { get; set; } = new ObservableCollection<string>();
 
         public CollectionViewSource TasksCvs { get; set; } = new CollectionViewSource();
+
+        internal void OnAddPreset(Preset p)
+        {
+            var pvm = new PresetVM(p, this);
+            PresetsVMS.Add(pvm);
+            SubPresetVMEvents(pvm);
+        }
 
         public SnackbarMessageQueue MainMessageQueue { get; set; }
 
@@ -396,6 +421,20 @@ namespace BackgroundEasy.ViewModel
             }
         }
 
+        public string[] PreviewExampleOptions { get; set; } = new string[] { "Portrait - small", "Portrait - large", "Landscape - small", "Landscape - large" };
+
+
+        private string _SelectedPreviewExample = ConfigService.Instance.LastUserSelectedPreviewExample;
+        public string SelectedPreviewExample
+        {
+            set { _SelectedPreviewExample = value;
+                if (!deferUpdateUserConfig)
+                    Config.LastUserSelectedPreviewExample = value;
+                notif(nameof(SelectedPreviewExample));
+                UpdateCurrentPreviewImage();
+            }
+            get { return _SelectedPreviewExample; }
+        }
 
 
 
@@ -421,11 +460,34 @@ namespace BackgroundEasy.ViewModel
 
         private void PushUIToCurrentBackground()
         {
-            CurrentBackground = new Background()
+            if (SelectedTabIx == 1)
             {
-                BackgroundColor = System.Drawing.Color.FromArgb(GetAlpha(), ColorPickerValue.R, ColorPickerValue.G, ColorPickerValue.B)
+                CurrentBackground = new Background()
+                {
+                    BackgroundColor = System.Drawing.Color.FromArgb(GetAlpha(), ColorPickerValue.R, ColorPickerValue.G, ColorPickerValue.B)
+                };
+            }
+            else if (SelectedTabIx == 0)
+            {
+                CurrentBackground = new Background()
+                {
+                    BackgroundImagePath = CuurentBackgroundImagePath
+                };
+            }
+            else if (SelectedTabIx == 2)
+            {
+                if (CurrentSelectedPresetVM != null)
+                {
+                    var p = CurrentSelectedPresetVM.Model;
+                    CurrentBackground = new Background()
+                    {
+                        BackgroundImagePath = p.ImagePath,
+                        BackgroundColor = p.ImagePath != null ? default(System.Drawing.Color): p.TryGetColor()
+                    };
+                }
                 
-            };
+            }
+
         }
 
         private ImageSource _PreviewImageSource;
@@ -435,7 +497,66 @@ namespace BackgroundEasy.ViewModel
             get { return _PreviewImageSource; }
         }
 
-     
+
+        private BitmapImage _CurrentPreviewImage;
+        public BitmapImage CurrentPreviewImage
+        {
+            set { _CurrentPreviewImage = value;
+                notif(nameof(CurrentPreviewImage));
+                UpdatePreview();
+            }
+            get { return _CurrentPreviewImage; }
+        }
+
+
+       
+
+        private void UpdateCurrentPreviewImage()
+        {
+            BitmapImage res = null;
+            if (SelectedPreviewExample == "Portrait - small")
+            {
+                var uri_str = "pack://application:,,,/Media/example-small.png";
+                var exampleImg = new BitmapImage(new Uri(uri_str));
+                res = exampleImg;
+            }
+            else if (SelectedPreviewExample == "Portrait - large")
+            {
+                var uri_str = "pack://application:,,,/Media/example-large.png";
+                var exampleImg = new BitmapImage(new Uri(uri_str));
+                res = exampleImg;
+            }
+            else if (SelectedPreviewExample == "Landscape - small")
+            {
+                var uri_str = "pack://application:,,,/Media/example-small.png";
+                var exampleImg = new BitmapImage(new Uri(uri_str));
+                res = flipImage(exampleImg);
+            }
+            else if (SelectedPreviewExample == "Landscape - large")
+            {
+                var uri_str = "pack://application:,,,/Media/example-large.png";
+                var exampleImg = new BitmapImage(new Uri(uri_str));
+                res = flipImage(exampleImg);
+            }
+            else
+            {
+                //the default is similar to Portrait - small
+                var uri_str = "pack://application:,,,/Media/example-small.png";
+                var exampleImg = new BitmapImage(new Uri(uri_str));
+                res = exampleImg;
+            }
+            CurrentPreviewImage = res;
+        }
+        /// <summary>
+        /// rotates the image 90 then flips the result horuzontally 
+        /// </summary>
+        /// <param name="exampleImg"></param>
+        /// <returns></returns>
+        private BitmapImage flipImage(BitmapImage exampleImg)
+        {
+            return ProcessingUtils.FlipImage(exampleImg);
+        }
+
         System.Windows.Media.Brush MiTransparencyBrush
         {
             get; set;
@@ -443,39 +564,68 @@ namespace BackgroundEasy.ViewModel
 
         private void UpdatePreview()
         {
-            var uri_str = "pack://application:,,,/Media/example-small.png";
-            var packUri = new Uri(uri_str);
-            var exampleImg = new  BitmapImage(new Uri(uri_str));
-            //MessageBox.Show($"{exampleImg.PixelWidth} - {exampleImg.PixelHeight}");
+
+            var exampleImg = CurrentPreviewImage;
+            if (exampleImg == null) return;
+            Background bg = CurrentBackground;
+            
+            if (bg == null) return;
+            var preview_raw = ProcessingHelper.AddBackgroundToImagePreview(exampleImg,bg,new BackgroundLayeringOptions());
+
+           
             var drawingVisual = new DrawingVisual();
             var drawingContext = drawingVisual.RenderOpen();
 
-            
-            drawingContext.DrawRectangle(MiTransparencyBrush, null, new Rect(0, 0, exampleImg.PixelWidth, exampleImg.PixelHeight));
-            //Message($"{IsImageTabSelected} {IsBrushTabSelected}");
-            if (SelectedTabIx==0)
-            {
-                if (CuurentBackgroundImagePath != null)
-                {
-                    var bgImg = new BitmapImage(new Uri(CuurentBackgroundImagePath));
-                    drawingContext.DrawImage(bgImg, new Rect(0, 0, exampleImg.PixelWidth, exampleImg.PixelHeight));
-                }
-            }
-            else if(SelectedTabIx==1)
-            {
-                SolidColorBrush b = ColorPickerBrushValue;
-                drawingContext.DrawRectangle(b , null, new Rect(0, 0, exampleImg.PixelWidth, exampleImg.PixelHeight));
-            }
-
-            drawingContext.DrawImage(exampleImg, new Rect(0, 0, exampleImg.PixelWidth, exampleImg.PixelHeight));
+            //draw trancparency tiles
+            drawingContext.DrawRectangle(MiTransparencyBrush, null, new Rect(0, 0, preview_raw.Width, preview_raw.Height));            
+            //draw the combined image
+            drawingContext.DrawImage(preview_raw, new Rect(0, 0, preview_raw.Width, preview_raw.Height));
 
             drawingContext.Close();
-            
             var renderTarget = new RenderTargetBitmap((int)exampleImg.PixelWidth, (int)exampleImg.PixelHeight, 96, 96, PixelFormats.Default);
             renderTarget.Render(drawingVisual);
             PreviewImageSource =  renderTarget;
 
         }
+
+
+
+
+        private PresetVM _CurrentSelectedPresetVM;
+        public PresetVM CurrentSelectedPresetVM
+        {
+            set { _CurrentSelectedPresetVM = value;
+                notif(nameof(CurrentSelectedPresetVM));
+                try
+                {
+                    PushUIToCurrentBackground();
+                }
+                catch (Exception err)
+                {
+                    MessageBox.Show(err.ToString());
+                }
+            }
+            get { return _CurrentSelectedPresetVM; }
+        }
+
+
+
+
+        public void MakeSelected(PresetVM pvm)
+        {
+            
+            if (CurrentSelectedPresetVM != null)
+            {
+                CurrentSelectedPresetVM.IsSelected = false;
+            }
+            CurrentSelectedPresetVM = pvm;
+            if (pvm != null)
+            {
+                pvm.IsSelected = true;
+            }
+            
+        }
+
 
 
         public ICommand AboutCommand { get { return new MICommand(hndlAboutCommand); } }
@@ -689,7 +839,10 @@ namespace BackgroundEasy.ViewModel
                 string outputFolder = CurrentInputDestinationFolder;
                 bool shouldSkipExisting = InputShouldSkipExisting;
                 string outputTemplate = Config.OutputFilenameTemplate?.Replace("{SKU}", "{sku}");
-                
+                if (CurrentBackground.BackgroundImagePath != null && CurrentBackground.BackgroundImage == null)
+                {
+                    CurrentBackground.BackgroundImage = File.ReadAllBytes(CurrentBackground.BackgroundImagePath);
+                }
                 //# validate app task input
 
 
@@ -720,9 +873,9 @@ namespace BackgroundEasy.ViewModel
                 {
                     throw new InvalidUserOperationException("Please specify the image to use as background");
                 }
-                if (IsSavedBgTabSelected )
+                if (CurrentBackground==null )
                 {
-                    throw new InvalidUserOperationException("no background preset selected");
+                    throw new InvalidUserOperationException("no background selected");
                 }
 
 
@@ -899,6 +1052,8 @@ namespace BackgroundEasy.ViewModel
 
         public ICommand SaveCurrentBackgroundAsPresetCommand { get { return new MICommand(hndlSaveCurrentBackgroundAsPresetCommand, canExecuteSaveCurrentBackgroundAsPresetCommand); } }
 
+        public ScrapingHelper ProcessingHelper { get; private set; }
+
         private bool canExecuteSaveCurrentBackgroundAsPresetCommand()
         {
             return IsBrushTabSelected|| IsImageTabSelected;
@@ -906,7 +1061,8 @@ namespace BackgroundEasy.ViewModel
 
         private void hndlSaveCurrentBackgroundAsPresetCommand()
         {
-            var vm = new CreateEditPresetVM(this,SH);
+            if (CurrentBackground == null) throw new InvalidUserOperationException("no background");
+            var vm = new CreateEditPresetVM(this,SH,CurrentBackground);
             var w = new View.CreateEditPresetWindow();
             w.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             w.Owner = App.Current.MainWindow;

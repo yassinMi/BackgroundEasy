@@ -29,6 +29,19 @@ namespace BackgroundEasy.Services
     public static class Utils
     {
 
+
+        static System.Drawing.ColorConverter cc = new System.Drawing.ColorConverter();
+        public static String HexConverter(System.Drawing.Color c)
+        {
+            return "#" + c.R.ToString("X2") + c.G.ToString("X2") + c.B.ToString("X2");
+        }
+
+        internal static System.Drawing.Color HexToColor(string solidColorHex)
+        {
+            if (string.IsNullOrWhiteSpace(solidColorHex)) throw new ArgumentException($"color hex invalid: '{solidColorHex}'");
+            return (System.Drawing.Color) cc.ConvertFromString(solidColorHex);
+        }
+
         /// <summary>
         /// compute the next name for a collection with a numbered naming patteren, eg "myFile - copy(1)" "myFile - copy(2)"
         /// </summary>

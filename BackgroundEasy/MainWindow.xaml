@@ -23,7 +23,7 @@
         mc:Ignorable="d"
         materialDesign:ThemeAssist.Theme="Light"
     
-        Title="{Binding WindowTitle, Mode=OneWay}" Height="610.903" Width="793.5"  UseLayoutRounding="True" SnapsToDevicePixels="True" MinWidth="600" d:DataContext="{d:DesignInstance {x:Type ViewModel:MainVM}, IsDesignTimeCreatable=True}" Icon="app.ico" WindowStartupLocation="CenterScreen">
+        Title="{Binding WindowTitle, Mode=OneWay}" Height="680.903" Width="793.5"  UseLayoutRounding="True" SnapsToDevicePixels="True" MinWidth="600" d:DataContext="{d:DesignInstance {x:Type ViewModel:MainVM}, IsDesignTimeCreatable=True}" Icon="app.ico" WindowStartupLocation="CenterScreen">
     <Window.InputBindings>
         <KeyBinding Gesture="ctrl + g"   Command="{Binding GpDevCommand}" >
 
@@ -673,13 +673,14 @@
                                         <RowDefinition Height="auto"/>
                                         <RowDefinition Height="*"/>
                                     </Grid.RowDefinitions>
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock VerticalAlignment="Center" Text="Preview Size" Margin="0,0,8,0"/>
-                                        <TextBox VerticalAlignment="Center" Text="800"/>
-                                        <custom:PackIconMaterial VerticalAlignment="Center" Kind="Close" Width="10" Height="10" Margin="4,0"/>
-                                        <TextBox VerticalAlignment="Center" Text="800"/>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,8,0">
+                                        <ComboBox ItemsSource="{Binding PreviewExampleOptions}" SelectedItem="{Binding SelectedPreviewExample}" SelectedIndex="0" Width="121" Margin="0,0,8,0" HorizontalAlignment="Right">
+                                            
+                                        </ComboBox>
+                                       
+                                        
                                     </StackPanel>
-                                    <Border Grid.Row="1" BorderBrush="#FFD30000"  Background="#FFE8E8E8" Margin="8" BorderThickness="1">
+                                    <Border Grid.Row="1" BorderBrush="#FFBFBFBF"  Background="#FFE2E2E2" Margin="8" BorderThickness="1">
                                         <Image Source="{Binding PreviewImageSource}" HorizontalAlignment="Center" VerticalAlignment="Center" />
                                     </Border>
 

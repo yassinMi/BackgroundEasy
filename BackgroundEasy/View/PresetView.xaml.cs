@@ -29,6 +29,14 @@ namespace BackgroundEasy.View
 
         }
 
+        private void Images_section_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            ViewModel.PresetVM vm = this.DataContext as ViewModel.PresetVM;
+            if (vm != null)
+            {
+                vm.SelectCommand.Execute(null);
+            }
+        }
     }
 
 

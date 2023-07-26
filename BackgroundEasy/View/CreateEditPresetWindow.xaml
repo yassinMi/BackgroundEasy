@@ -51,11 +51,18 @@
                     </Grid.ColumnDefinitions>
                     <Label Content="Name" Margin="0,0,8,0" VerticalAlignment="Center"/>
                     <ComboBox materialDesign:HintAssist.Hint="Preset Name"
-  IsEditable="True" Grid.Column="1" SelectedItem="{Binding SelectedName}" Text="{Binding Text,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding NamesOptions,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Margin="0,0,8,0" VerticalAlignment="Center"  >
+  IsEditable="True" Grid.Column="1" TextSearch.TextPath="Name" SelectedValuePath="Name" SelectedItem="{Binding SelectedPreset}" Text="{Binding Text,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding PresetsOptions,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Margin="0,0,8,0" VerticalAlignment="Center"  >
                         
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding Name}"/>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="28"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Image Margin="4" Source="{Binding ThumbImageSource}" Width="20" Height="20"/>
+                                    <TextBlock Margin="8" Grid.Column="1" VerticalAlignment="Center"  Text="{Binding  Name}" TextTrimming="CharacterEllipsis"/>
+                                </Grid>
                             </DataTemplate>
                         </ComboBox.ItemTemplate>
                     </ComboBox>

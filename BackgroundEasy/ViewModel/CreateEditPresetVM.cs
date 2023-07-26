@@ -18,11 +18,12 @@ namespace BackgroundEasy.ViewModel
             //time
         }
 
-        public CreateEditPresetVM(MainVM mainVm, StorageHelper sh)
+        public CreateEditPresetVM(MainVM mainVm, StorageHelper sh,Background capturedBg)
         {
             this.SH = sh;
             this.MainVm = mainVm;
-            NamesOptions = mainVm.PresetsVMS.Select(p => p.Name).ToArray();
+            PresetsOptions = mainVm.PresetsVMS;
+            this.CapturedBackground = capturedBg;
             Init();
         }
 
@@ -51,14 +52,15 @@ namespace BackgroundEasy.ViewModel
         }
 
 
-        private string _SelectedName;
-        public string SelectedName
+        private PresetVM _SelectedPreset;
+        public PresetVM SelectedPreset
         {
-            set { _SelectedName = value;
-                notif(nameof(SelectedName));
-                if (value != null) CurrentName = value;
+            set {
+                _SelectedPreset = value;
+                notif(nameof(SelectedPreset));
+                if (value != null) CurrentName = value.Name;
             }
-            get { return _SelectedName; }
+            get { return _SelectedPreset; }
         }
 
 
@@ -104,10 +106,7 @@ namespace BackgroundEasy.ViewModel
         }
 
 
-        private static String HexConverter(System.Drawing.Color c)
-        {
-            return "#" + c.R.ToString("X2") + c.G.ToString("X2") + c.B.ToString("X2");
-        }
+       
         private void hndlCreateCommand()
         {
             try
@@ -117,14 +116,25 @@ namespace BackgroundEasy.ViewModel
                 {
                     throw new InvalidOperationException("please specify a preset name");
                 }
-                SH.AddPreset(new Model.Preset() {
-                    ImagePath = MainVm.CuurentBackgroundImagePath,
-                    Name = name,
+                var maybeExisting = PresetsOptions.FirstOrDefault(p => p.Name == CurrentName)?.Model;
 
-                    SolidColorHex = HexConverter(Services.Utils.DrawingColorFromMediaColor(MainVm.ColorPickerValue))
-                });
-                MainVm.Message($"saved {name}");
-                OnCloseWindow(); 
+               if (maybeExisting!=null)
+                {
+                    //#edit existent mode
+                    SH.UpdatePreset(maybeExisting, Model.Preset.FromBackground(CapturedBackground, name) );
+                    MainVm.Message($"Updated Preset {name}");
+                    OnCloseWindow();
+                }
+                else
+                {
+                    //# create new mode
+                    var newPreset = Model.Preset.FromBackground(CapturedBackground, name);
+                    SH.AddPreset(newPreset);
+                    MainVm.Message($"Created Preset {name}");
+                    MainVm.OnAddPreset(newPreset);
+                    OnCloseWindow();
+                }
+                
             }
             catch (Exception err)
             {
@@ -136,14 +146,14 @@ namespace BackgroundEasy.ViewModel
 
 
       
-        private string[] _NamesOptions;
+        private IEnumerable<PresetVM> _PresetsOptions;
         /// <summary>
         /// to overrid a presert
         /// </summary>
-        public string[] NamesOptions
+        public IEnumerable<PresetVM> PresetsOptions
         {
-            set { _NamesOptions = value; notif(nameof(NamesOptions)); }
-            get { return _NamesOptions; }
+            set { _PresetsOptions = value; notif(nameof(PresetsOptions)); }
+            get { return _PresetsOptions; }
         }
 
 
@@ -154,6 +164,7 @@ namespace BackgroundEasy.ViewModel
 
         public MainVM MainVm { get; private set; }
         public StorageHelper SH { get; private set; }
+        public Background CapturedBackground { get; private set; }
 
         private void hndlCancelCommand()
         {

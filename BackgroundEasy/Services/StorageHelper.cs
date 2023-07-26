@@ -175,23 +175,39 @@ namespace BackgroundEasy.Services
 
             return presets;
         }
+        //passes the new preset
+        public event EventHandler<Preset> PresetUpdated;
 
-        public void UpdatePreset(Preset preset)
+        public void UpdatePreset(Preset oldpreset,Preset newPreset)
         {
-            
-
+            if (oldpreset == null) throw new ArgumentNullException("oldPreset");
+            if (newPreset == null) throw new ArgumentNullException("newPreset");
+            if (oldpreset.Name != newPreset.Name) throw new Exception("new preset must have the same name");
+            if (
+                oldpreset.ImagePath != newPreset.ImagePath ||
+                oldpreset.SolidColorHex != newPreset.SolidColorHex
+                )
+            {
                 using (var transaction = Connection.BeginTransaction())
                 {
                     using (var command = new SQLiteCommand("UPDATE Presets SET ImagePath = @imagePath, SolidColorHex = @solidColorHex WHERE Name = @name", Connection))
                     {
-                        command.Parameters.AddWithValue("@imagePath", preset.ImagePath);
-                        command.Parameters.AddWithValue("@solidColorHex", preset.SolidColorHex);
-                        command.Parameters.AddWithValue("@name", preset.Name);
+                        command.Parameters.AddWithValue("@imagePath", newPreset.ImagePath);
+                        command.Parameters.AddWithValue("@solidColorHex", newPreset.SolidColorHex);
+                        command.Parameters.AddWithValue("@name", newPreset.Name);
                         command.ExecuteNonQuery();
                     }
 
                     transaction.Commit();
                 }
+                PresetUpdated?.Invoke(this, newPreset);
+            }
+            else
+            {
+                return;
+            }
+
+                
             
         }
 

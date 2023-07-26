@@ -11,6 +11,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace BackgroundEasy.Services
 {
@@ -138,6 +140,51 @@ namespace BackgroundEasy.Services
         }
 
 
+        public ImageSource AddBackgroundToImagePreview(BitmapImage exampleImg, Background bg, BackgroundLayeringOptions opts)
+        {
+            if (bg.IsImageType)
+            {
+                var drawingVisual = new DrawingVisual();
+                var drawingContext = drawingVisual.RenderOpen();
+                BitmapImage bgImg = new BitmapImage(new Uri(bg.BackgroundImagePath));
+                var bgImgSize = new System.Drawing.Size(bgImg.PixelWidth, bgImg.PixelHeight);
+                var exampleImgSize = new System.Drawing.Size(exampleImg.PixelWidth, exampleImg.PixelHeight);
+
+                //# scaling bg as necessary
+                double scaleX = (double)exampleImgSize.Width / bgImgSize.Width;
+                double scaleY = (double)exampleImgSize.Height / bgImgSize.Height;
+                // Choose the larger scaling factor to preserve the aspect ratio of the image
+                double scale = Math.Max(1, Math.Max(scaleX, scaleY));
+                // Calculate the new width and height based on the chosen scaling factor
+                int newWidth = (int)(bgImgSize.Width * scale);
+                int newHeight = (int)(bgImgSize.Height * scale);
+                var newBgImgSize = new System.Drawing.Size(newWidth, newHeight);
+
+                var resizedBgImg = ProcessingUtils.GetResiezedImage(bgImg, newWidth, newHeight);
+                var bgPos = ProcessingUtils.GetBgPositionRectangle(newBgImgSize, exampleImgSize, opts.Alignment);
+
+                drawingContext.DrawImage(resizedBgImg, bgPos);
+                drawingContext.DrawImage(exampleImg, new Rect(0, 0, exampleImg.PixelWidth, exampleImg.PixelHeight));
+                drawingContext.Close();
+                var renderTarget = new RenderTargetBitmap((int)exampleImg.PixelWidth, (int)exampleImg.PixelHeight, 96, 96, PixelFormats.Default);
+                renderTarget.Render(drawingVisual);
+                return renderTarget;
+            }
+            else
+            {
+                var drawingVisual = new DrawingVisual();
+                var drawingContext = drawingVisual.RenderOpen();
+                SolidColorBrush b = new SolidColorBrush(Utils.MediaColorFromDrawingColor( bg.BackgroundColor));
+                drawingContext.DrawRectangle(b, null, new Rect(0, 0, exampleImg.PixelWidth, exampleImg.PixelHeight));
+                drawingContext.DrawImage(exampleImg, new Rect(0, 0, exampleImg.PixelWidth, exampleImg.PixelHeight));
+                drawingContext.Close();
+                var renderTarget = new RenderTargetBitmap((int)exampleImg.PixelWidth, (int)exampleImg.PixelHeight, 96, 96, PixelFormats.Default);
+                renderTarget.Render(drawingVisual);
+                return renderTarget;
+            }
+            
+        }
+
         public async Task<byte[]> AddBackgroundToImage(byte[] image, Background bg, BackgroundLayeringOptions opts)
         {
             //# validate params
@@ -149,6 +196,7 @@ namespace BackgroundEasy.Services
             using (Bitmap combinedImage = new Bitmap(pngImage.Width, pngImage.Height))
             {
                 // Set the background color for the combined image
+                if(bg.IsImageType==false)
                 using (Graphics g = Graphics.FromImage(combinedImage))
                 {
 
@@ -157,16 +205,30 @@ namespace BackgroundEasy.Services
                 }
 
                 // Draw the background image on the combined image
-                if (bg.BackgroundImage != null )
+                if (bg.IsImageType  )
                     using (Image backgroundImage = Image.FromStream(new MemoryStream(bg.BackgroundImage)))
                     using (Graphics g = Graphics.FromImage(combinedImage))
                     {
-                        g.DrawImage(backgroundImage, 0, 0, backgroundImage.Width, backgroundImage.Height);
+                        //# scaling bg as necessary
+                        double scaleX = (double)pngImage.Width / backgroundImage.Width;
+                        double scaleY = (double)pngImage.Height / backgroundImage.Height;
+                        // Choose the larger scaling factor to preserve the aspect ratio of the image
+                        double scale = Math.Max(1, Math.Max(scaleX, scaleY));
+                        // Calculate the new width and height based on the chosen scaling factor
+                        int newWidth = (int)(backgroundImage.Width * scale);
+                        int newHeight = (int)(backgroundImage.Height * scale);
+                        var newBgImgSize = new System.Drawing.Size(newWidth, newHeight);
+
+                        var resizedBgImg = ProcessingUtils.ResizeImageProduction(backgroundImage, newWidth, newHeight);
+                        var bgPos = ProcessingUtils.GetBgPositionRectangle(newBgImgSize, new System.Drawing.Size(pngImage.Width,pngImage.Height), opts.Alignment);
+
+                        g.DrawImage(resizedBgImg, (float)bgPos.X, (float)bgPos.Y, (float)bgPos.Width, (float)bgPos.Height);
                     }
 
                 // Draw the PNG image on top of the background
                 using (Graphics g = Graphics.FromImage(combinedImage))
                 {
+
                     g.DrawImage(pngImage, 0, 0, pngImage.Width, pngImage.Height);
                 }
 
@@ -186,12 +248,18 @@ namespace BackgroundEasy.Services
 
     public class Background
     {
-        public Color BackgroundColor { get; set; }
+        public System.Drawing.Color BackgroundColor { get; set; }
         public byte[] BackgroundImage { get; internal set; }
+        public string BackgroundImagePath { get; internal set; }
+        public bool IsImageType { get { return BackgroundImage != null || BackgroundImagePath != null; } }
     }
     public class BackgroundLayeringOptions
     {
-
+        public BackgroundLayeringOptions()
+        {
+            Alignment = ContentAlignment.MiddleCenter;
+        }
+        public ContentAlignment Alignment { get; set; }
     }
 
     /// <summary>

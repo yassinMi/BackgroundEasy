@@ -9,6 +9,8 @@ using BackgroundEasy.Model;
 using System.Windows.Media.Imaging;
 using System.Windows;
 using System.Drawing;
+using System.Windows.Input;
+using Mi.Common;
 
 namespace BackgroundEasy.ViewModel
 {
@@ -29,12 +31,27 @@ namespace BackgroundEasy.ViewModel
         private Preset _Model;
         public Preset Model
         {
-            set { _Model = value; notif(nameof(Model)); }
+            set { _Model = value;
+
+                notif(nameof(Model));
+                notif(nameof(ThumbImageSource));
+            }
             get { return _Model; }
         }
 
 
-        
+
+        private bool _IsSelected;
+        /// <summary>
+        /// currently selected (used)
+        /// </summary>
+        public bool IsSelected
+        {
+            set { _IsSelected = value; notif(nameof(IsSelected)); }
+            get { return _IsSelected; }
+        }
+
+
 
         public ImageSource ThumbImageSource
         {
@@ -49,7 +66,7 @@ namespace BackgroundEasy.ViewModel
             
             var drawingVisual = new DrawingVisual();
             var drawingContext = drawingVisual.RenderOpen();
-            int height =40, width = 40;
+            int height =30, width = 30;
             if (IsImageType)
             {
                 var img = new BitmapImage(new Uri(Model.ImagePath));
@@ -83,5 +100,29 @@ namespace BackgroundEasy.ViewModel
         }
 
         public MainVM MainVm { get; private set; }
+
+
+        public event EventHandler SelectRequest;
+        public ICommand SelectCommand { get { return new MICommand(hndlSelectCommand, canExecuteSelectCommand); } }
+
+        private bool canExecuteSelectCommand()
+        {
+            return true;
+        }
+
+        private void hndlSelectCommand()
+        {
+            try
+            {
+                SelectRequest?.Invoke(this, EventArgs.Empty);
+            }
+            catch (Exception err)
+            {
+
+                MainVm.ReportErr(err);
+            }
+        }
+
+
     }
 }

@@ -219,6 +219,14 @@ namespace BackgroundEasy.Services
 
 
 
+        private string _LastUserSelectedPreviewExample="Portrait - small";
+        public string LastUserSelectedPreviewExample
+        {
+            set { _LastUserSelectedPreviewExample = value; notif(nameof(LastUserSelectedPreviewExample)); }
+            get { return _LastUserSelectedPreviewExample; }
+        }
+
+
 
 
 
