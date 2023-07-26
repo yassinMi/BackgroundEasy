@@ -492,10 +492,14 @@ namespace BackgroundEasy.ViewModel
             }
             else if (SelectedTabIx == 0)
             {
-                CurrentBackground = new Background()
+                if (string.IsNullOrWhiteSpace(CuurentBackgroundImagePath))
                 {
-                    BackgroundImagePath = CuurentBackgroundImagePath
-                };
+                    CurrentBackground = null;
+                }
+                else
+                {
+                    CurrentBackground = new Background() { BackgroundImagePath = CuurentBackgroundImagePath };
+                }
             }
             else if (SelectedTabIx == 2)
             {
@@ -507,6 +511,10 @@ namespace BackgroundEasy.ViewModel
                         BackgroundImagePath = p.ImagePath,
                         BackgroundColor = p.ImagePath != null ? default(System.Drawing.Color): p.TryGetColor()
                     };
+                }
+                else
+                {
+                    CurrentBackground = null;
                 }
                 
             }
@@ -594,24 +602,34 @@ namespace BackgroundEasy.ViewModel
             if (exampleImg == null) 
             {
                 CoreUtils.WriteLine($"exampleImg null, exiting UpdatePreview");
+                PreviewImageSource = null;
                 return;
             }
+            ImageSource preview_raw = null;
             Background bg = CurrentBackground;
+            int width, height;
             if (bg == null)
             {
                 CoreUtils.WriteLine($"CurrentBackground null, exiting UpdatePreview");
-                return;
+                preview_raw = CurrentPreviewImage;
+                width = CurrentPreviewImage.PixelWidth;
+                height = CurrentPreviewImage.PixelHeight;
             }
-            var preview_raw = ProcessingHelper.AddBackgroundToImagePreview(exampleImg,bg,new BackgroundLayeringOptions());
+            else
+            {
+                preview_raw = ProcessingHelper.AddBackgroundToImagePreview(exampleImg, bg, new BackgroundLayeringOptions());
+                width = (int)preview_raw.Width;
+                height = (int)preview_raw.Height;
+            }
 
-           
+
             var drawingVisual = new DrawingVisual();
             var drawingContext = drawingVisual.RenderOpen();
 
             //draw trancparency tiles
-            drawingContext.DrawRectangle(MiTransparencyBrush, null, new Rect(0, 0, preview_raw.Width, preview_raw.Height));            
+            drawingContext.DrawRectangle(MiTransparencyBrush, null, new Rect(0, 0, exampleImg.PixelWidth, exampleImg.PixelHeight));            
             //draw the combined image
-            drawingContext.DrawImage(preview_raw, new Rect(0, 0, preview_raw.Width, preview_raw.Height));
+            drawingContext.DrawImage(preview_raw, new Rect(0, 0, width, height));
 
             drawingContext.Close();
             var renderTarget = new RenderTargetBitmap((int)exampleImg.PixelWidth, (int)exampleImg.PixelHeight, 96, 96, PixelFormats.Default);
@@ -900,10 +918,7 @@ namespace BackgroundEasy.ViewModel
                 string outputFolder = CurrentInputDestinationFolder;
                 bool shouldSkipExisting = InputShouldSkipExisting;
                 string outputTemplate = Config.OutputFilenameTemplate?.Replace("{imagename}", "{ImageName}");
-                if (CurrentBackground.BackgroundImagePath != null && CurrentBackground.BackgroundImage == null)
-                {
-                    CurrentBackground.BackgroundImage = File.ReadAllBytes(CurrentBackground.BackgroundImagePath);
-                }
+                
                 //# validate app task input
 
 
@@ -939,6 +954,10 @@ namespace BackgroundEasy.ViewModel
                     throw new InvalidUserOperationException("no background selected");
                 }
 
+                if (CurrentBackground.BackgroundImagePath != null && CurrentBackground.BackgroundImage == null)
+                {
+                    CurrentBackground.BackgroundImage = File.ReadAllBytes(CurrentBackground.BackgroundImagePath);
+                }
 
                 ScrapingHelper scHelp = new ScrapingHelper();
                
@@ -1121,17 +1140,25 @@ namespace BackgroundEasy.ViewModel
 
         private void hndlSaveCurrentBackgroundAsPresetCommand()
         {
-            if (CurrentBackground == null) throw new InvalidUserOperationException("no background");
-            var vm = new CreateEditPresetVM(this,SH,CurrentBackground);
-            var w = new View.CreateEditPresetWindow();
-            w.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-            w.Owner = App.Current.MainWindow;
-            w.DataContext = vm;
-            vm.CloseWindowRequest += (s, e) =>
+            try
             {
-                w.Close();
-            };
-            w.ShowDialog();
+                if (CurrentBackground == null) throw new InvalidUserOperationException("no background");
+                var vm = new CreateEditPresetVM(this, SH, CurrentBackground);
+                var w = new View.CreateEditPresetWindow();
+                w.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                w.Owner = App.Current.MainWindow;
+                w.DataContext = vm;
+                vm.CloseWindowRequest += (s, e) =>
+                {
+                    w.Close();
+                };
+                w.ShowDialog();
+            }
+            catch (Exception err)
+            {
+                ReportErr(err);
+            }
+           
 
         }
 

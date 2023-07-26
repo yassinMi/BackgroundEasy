@@ -340,9 +340,19 @@
                 <MenuItem.Header>
                     <AccessText Text="_File"/>
                 </MenuItem.Header>
-                <MenuItem Header="_Import Images List" Command="{Binding AddSkuFromFileCommand}" >
+                <MenuItem Header="_Import Image" Command="{Binding AddImageCommand}" >
                     <MenuItem.Icon>
                         <Image Width="16" Height="16" Source="Media/file_16px_ss.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="_Import Background Image" Command="{Binding SelectBgImageCommand}" >
+                    <MenuItem.Icon>
+                        <Image Width="16" Height="16" Source="Media/file_16px_ss.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="_Clear Images" Command="{Binding ClearImagesCommand}" >
+                    <MenuItem.Icon>
+                        <Image Width="16" Height="16" Source="Media/close_16px_FFDF281E.png" />
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Header="_Save Background As..." Command="{Binding SaveCurrentBackgroundAsPresetCommand}" >

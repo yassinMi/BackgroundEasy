@@ -25,6 +25,30 @@ namespace BackgroundEasy.Model
         /// </summary>
         public bool SkipExisting { get; set; }
         public Background Background { get; set; }
+        /// <summary>
+        /// accessing this infers the format from the <see cref="OutputFilenameTemplate"/> defaultig to png
+        /// </summary>
+        public System.Drawing.Imaging.ImageFormat FromatFromTemplate { get
+            {
+                string ext = OutputFilenameTemplate?.Split('.').LastOrDefault();
+                if(ext==null) return System.Drawing.Imaging.ImageFormat.Png; 
+                if (ext.Equals("png", StringComparison.OrdinalIgnoreCase))
+                {
+                    return System.Drawing.Imaging.ImageFormat.Png;
+                }
+                else if (ext.Equals("jpg", StringComparison.OrdinalIgnoreCase))
+                {
+                    return System.Drawing.Imaging.ImageFormat.Jpeg;
+                }
+                else if (ext.Equals("jpeg", StringComparison.OrdinalIgnoreCase))
+                {
+                    return System.Drawing.Imaging.ImageFormat.Jpeg;
+                }
+                else
+                {
+                    return System.Drawing.Imaging.ImageFormat.Png;
+                }
+            } }
 
     }
 }

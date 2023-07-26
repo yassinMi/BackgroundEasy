@@ -101,7 +101,7 @@ namespace BackgroundEasy.Services
 
                     var img = File.ReadAllBytes(inputpath);
                     BackgroundLayeringOptions opts = new BackgroundLayeringOptions();
-                    img_data = await AddBackgroundToImage(img, bg, opts).ConfigureAwait(false);
+                    img_data = await AddBackgroundToImage(img, bg, opts,Options.FromatFromTemplate).ConfigureAwait(false);
 
                     imgBytes = img_data.Length;
                     threwException = false;
@@ -185,7 +185,7 @@ namespace BackgroundEasy.Services
             
         }
 
-        public async Task<byte[]> AddBackgroundToImage(byte[] image, Background bg, BackgroundLayeringOptions opts)
+        public async Task<byte[]> AddBackgroundToImage(byte[] image, Background bg, BackgroundLayeringOptions opts, ImageFormat frmt)
         {
             //# validate params
             var backgroundColor = bg.BackgroundColor;
@@ -235,7 +235,7 @@ namespace BackgroundEasy.Services
                 // Save the combined image to the specified output path
                 using (MemoryStream ms = new MemoryStream())
                 {
-                    combinedImage.Save(ms, ImageFormat.Png);
+                    combinedImage.Save(ms, frmt);
                     return ms.ToArray();
                 }
 
