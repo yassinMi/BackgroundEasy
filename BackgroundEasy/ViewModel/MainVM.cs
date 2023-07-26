@@ -93,6 +93,19 @@ namespace BackgroundEasy.ViewModel
         private void SubPresetVMEvents(PresetVM p)
         {
             p.SelectRequest += h_PresetVM_SelectRequest;
+            p.DeleteRequest += h_PresetVM_DeleteRequest;
+        }
+
+        private void h_PresetVM_DeleteRequest(object sender, EventArgs e)
+        {
+            PresetVM pvm = sender as PresetVM;
+            if (CurrentSelectedPresetVM == pvm)
+            {
+                MakeSelected(null);
+            }
+            SH.DeletePreset(pvm.Name);
+            PresetsVMS.Remove(pvm);
+            Message($"Deleted preset '{pvm.Name}'");
         }
 
         private void h_PresetVM_SelectRequest(object sender, EventArgs e)

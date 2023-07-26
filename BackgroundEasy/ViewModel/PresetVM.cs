@@ -117,6 +117,27 @@ namespace BackgroundEasy.ViewModel
             }
         }
 
+        public event EventHandler DeleteRequest;
+        public ICommand DeleteCommand { get { return new MICommand(hndlDeleteCommand, canExecuteDeleteCommand); } }
+
+        private bool canExecuteDeleteCommand()
+        {
+            return true;
+        }
+
+        private void hndlDeleteCommand()
+        {
+            try
+            {
+                DeleteRequest?.Invoke(this, EventArgs.Empty);
+            }
+            catch (Exception err)
+            {
+                MainVm.ReportErr(err);
+            }
+        }
+
+
 
     }
 }

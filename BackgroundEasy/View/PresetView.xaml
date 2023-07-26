@@ -26,6 +26,16 @@
         <Converters1:BooleanToVisibilityInverted x:Key="BooleanToVisibilityInverted"/>
     </UserControl.Resources>
     <materialDesign:ColorZone ToolTipService.Placement="Top" ToolTipService.PlacementTarget="{x:Reference Name=lbl}" ToolTip="{Binding Name}"  VerticalAlignment="Stretch"  BorderThickness="1" x:Name="Images_section" Grid.Column="0"  MouseLeftButtonDown="Images_section_MouseLeftButtonDown" >
+        <materialDesign:ColorZone.ContextMenu>
+            <ContextMenu x:Name="CtxMenu">
+
+            <MenuItem  Style="{DynamicResource MaterialDesignMenuItem}" Header="Delete" Command="{Binding  DeleteCommand}" CommandParameter="{Binding}">
+                <MenuItem.Icon>
+                    <Image Height="16"  Width="16" Source="/BackgroundEasy;component/Media/delete_16px_ss.png" />
+                </MenuItem.Icon>
+            </MenuItem>
+        </ContextMenu>
+        </materialDesign:ColorZone.ContextMenu>
         <materialDesign:ColorZone.Style>
             <Style TargetType="materialDesign:ColorZone">
                 <Setter Property="BorderBrush" Value="#FFACACAC"></Setter>
