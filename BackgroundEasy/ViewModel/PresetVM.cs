@@ -63,28 +63,22 @@ namespace BackgroundEasy.ViewModel
 
         public ImageSource GetThumbImageSource()
         {
-            
             var drawingVisual = new DrawingVisual();
             var drawingContext = drawingVisual.RenderOpen();
             int height =30, width = 30;
             if (IsImageType)
             {
-                var img = new BitmapImage(new Uri(Model.ImagePath));
+                var img = ProcessingUtils.CreateThumbnail(Model.ImagePath);
                 width = img.PixelWidth;
                 height = img.PixelHeight;
                 drawingContext.DrawImage(img, new Rect(0, 0, width, height));
-
             }
             else
             {
                 System.Drawing.Color c =(System.Drawing.Color) new System.Drawing.ColorConverter().ConvertFromString(Model.SolidColorHex);
-
                 drawingContext.DrawRectangle(new SolidColorBrush(Utils.MediaColorFromDrawingColor(c)), null, new Rect(0, 0, width, height));
             }
-
-
             drawingContext.Close();
-
             var renderTarget = new RenderTargetBitmap(width, height, 96, 96, PixelFormats.Default);
             renderTarget.Render(drawingVisual);
             return renderTarget;

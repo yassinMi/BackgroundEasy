@@ -62,12 +62,35 @@ namespace BackgroundEasy.ViewModel
 
                 OnAddPreset(p);
             }
+            if (Config.LastUserSelectedPresetName != null)
+            {
+                var toBeSeleceted = PresetsVMS.FirstOrDefault(pvm => pvm.Name == Config.LastUserSelectedPresetName);
+                if (toBeSeleceted != null) MakeSelected(toBeSeleceted);
+            }
+            MakeSelectedTabIxdefered(Config.LastUserSelectedTabIx);
             //draw preview
             UpdateCurrentPreviewImage();
             ColorPickerBrushValue.Color = GetBrushColor();
             PushUIToCurrentBackground();
             Images.CollectionChanged += (s, e) => { notif(nameof(IsEmptyStateVisible)); };
-            IsImageTabSelected = true;
+        }
+
+        private void MakeSelectedTabIxdefered(int ix)
+        {
+            if (ix == 0)
+            {
+                IsImageTabSelected = true; _IsBrushTabSelected = false; _IsSavedBgTabSelected = false;
+            }
+            else if (ix == 1)
+            {
+                _IsImageTabSelected = false; IsBrushTabSelected = true; _IsSavedBgTabSelected = false;
+            }
+            else if (ix == 2)
+            {
+                _IsImageTabSelected = false; _IsBrushTabSelected = false; IsSavedBgTabSelected = true;
+            }
+            _SelectedTabIx = ix;
+            CoreUtils.WriteLine($"exiting MakeSelectedTabIxdefered {ix} -> {SelectedTabIx}");
         }
 
         private void SubPresetVMEvents(PresetVM p)
@@ -312,6 +335,7 @@ namespace BackgroundEasy.ViewModel
         {
             set { _SelectedTabIx = value;
                 notif(nameof(SelectedTabIx));
+                Config.LastUserSelectedTabIx = value;
                 try
                 {
                     PushUIToCurrentBackground();
@@ -460,6 +484,8 @@ namespace BackgroundEasy.ViewModel
 
         private void PushUIToCurrentBackground()
         {
+            CoreUtils.WriteLine($"PushUIToCurrentBackground SelectedTabIx = {SelectedTabIx}");
+
             if (SelectedTabIx == 1)
             {
                 CurrentBackground = new Background()
@@ -513,6 +539,8 @@ namespace BackgroundEasy.ViewModel
 
         private void UpdateCurrentPreviewImage()
         {
+            CoreUtils.WriteLine($"UpdateCurrentPreviewImage");
+
             BitmapImage res = null;
             if (SelectedPreviewExample == "Portrait - small")
             {
@@ -564,12 +592,19 @@ namespace BackgroundEasy.ViewModel
 
         private void UpdatePreview()
         {
-
+            CoreUtils.WriteLine($"UpdatePreview");
             var exampleImg = CurrentPreviewImage;
-            if (exampleImg == null) return;
+            if (exampleImg == null) 
+            {
+                CoreUtils.WriteLine($"exampleImg null, exiting UpdatePreview");
+                return;
+            }
             Background bg = CurrentBackground;
-            
-            if (bg == null) return;
+            if (bg == null)
+            {
+                CoreUtils.WriteLine($"CurrentBackground null, exiting UpdatePreview");
+                return;
+            }
             var preview_raw = ProcessingHelper.AddBackgroundToImagePreview(exampleImg,bg,new BackgroundLayeringOptions());
 
            
@@ -619,6 +654,7 @@ namespace BackgroundEasy.ViewModel
                 CurrentSelectedPresetVM.IsSelected = false;
             }
             CurrentSelectedPresetVM = pvm;
+            Config.LastUserSelectedPresetName = pvm?.Name;
             if (pvm != null)
             {
                 pvm.IsSelected = true;

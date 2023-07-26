@@ -227,6 +227,22 @@ namespace BackgroundEasy.Services
         }
 
 
+        private string _LastUserSelectedPresetName;
+        public string LastUserSelectedPresetName
+        {
+            set { _LastUserSelectedPresetName = value; notif(nameof(LastUserSelectedPresetName)); }
+            get { return _LastUserSelectedPresetName; }
+        }
+
+
+        private int _LastUserSelectedTabIx=0;
+        public int LastUserSelectedTabIx
+        {
+            set { _LastUserSelectedTabIx = value; notif(nameof(LastUserSelectedTabIx)); }
+            get { return _LastUserSelectedTabIx; }
+        }
+
+
 
 
 

@@ -167,5 +167,61 @@ namespace BackgroundEasy.Services
             return resizedImage;
         }
 
+
+
+        public static BitmapImage CreateThumbnail(string imgPath)
+        {
+            using (Image originalImage = Image.FromFile(imgPath))
+            {
+                int maxWidth = 30;
+                int maxHeight = 30;
+
+                int newWidth, newHeight;
+                float aspectRatio = (float)originalImage.Width / originalImage.Height;
+
+                // Calculate the new dimensions while maintaining the original aspect ratio.
+                if (originalImage.Width > originalImage.Height)
+                {
+                    newWidth = maxWidth;
+                    newHeight = (int)(maxWidth / aspectRatio);
+                }
+                else
+                {
+                    newWidth = (int)(maxHeight * aspectRatio);
+                    newHeight = maxHeight;
+                }
+
+                // Create a new Bitmap to store the thumbnail.
+                using (Bitmap thumbnail = new Bitmap(newWidth, newHeight))
+                {
+                    using (Graphics graphics = Graphics.FromImage(thumbnail))
+                    {
+                        // Set high-quality interpolation mode to improve thumbnail quality.
+                        graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                        graphics.SmoothingMode = SmoothingMode.HighQuality;
+                        graphics.CompositingQuality = CompositingQuality.HighQuality;
+                        graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+
+                        // Draw the original image onto the thumbnail with the new dimensions.
+                        graphics.DrawImage(originalImage, new Rectangle(0, 0, newWidth, newHeight));
+                    }
+
+                    // Convert the Bitmap to a MemoryStream.
+                    MemoryStream memoryStream = new MemoryStream();
+                    thumbnail.Save(memoryStream, System.Drawing.Imaging.ImageFormat.Png);
+
+                    // Create a new BitmapImage from the MemoryStream.
+                    BitmapImage thumbnailImage = new BitmapImage();
+                    thumbnailImage.BeginInit();
+                    thumbnailImage.CacheOption = BitmapCacheOption.OnLoad;
+                    thumbnailImage.StreamSource = memoryStream;
+                    thumbnailImage.EndInit();
+                    thumbnailImage.Freeze(); // Freeze the image to improve performance.
+
+                    return thumbnailImage;
+                }
+            }
+        }
+
     }
 }

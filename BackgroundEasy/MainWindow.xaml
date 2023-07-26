@@ -594,13 +594,13 @@
 
                                     </StackPanel>
 
-                                    <Grid x:Name="mage_sect" Visibility="{Binding IsImageTabSelected, Converter={StaticResource BooleanToVisibilityConverter}}" d:IsHidden="True">
+                                    <Grid x:Name="mage_sect" Visibility="{Binding IsImageTabSelected, Converter={StaticResource BooleanToVisibilityConverter}}" Height="148" MaxHeight="148">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="auto"/>
                                             <ColumnDefinition Width="*"/>
                                         </Grid.ColumnDefinitions>
 
-                                        <Border Width="80" Height="80" Margin="8" Background="{StaticResource MiTransparencyTiles}">
+                                        <Border Width="80" Height="80" Margin="8" Background="{StaticResource MiTransparencyTiles}" VerticalAlignment="Top">
 
                                             <Grid>
                                                 <Image Source="{Binding CurrentBgImgImageSource, Mode=OneWay}"/>
@@ -629,18 +629,18 @@
 
                                         </StackPanel>
                                     </Grid>
-                                    <Grid x:Name="brush_sect" Visibility="{Binding IsBrushTabSelected, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                    <Grid x:Name="brush_sect" Visibility="{Binding IsBrushTabSelected, Converter={StaticResource BooleanToVisibilityConverter}}" MaxHeight="148" Height="148">
 
 
-                                        <StackPanel Width="200" HorizontalAlignment="Left" Margin="8">
-                                            <materialDesign:ColorPicker Color="{Binding ColorPickerValue,Mode=TwoWay}" Height="150" Width="200"/>
-                                            <Slider Margin="8"  Maximum="1" Minimum="0" Value="{Binding ToleranceSliderValue,Mode=TwoWay}"></Slider>
+                                        <StackPanel Width="200" HorizontalAlignment="Left" Margin="8,8,8,0" VerticalAlignment="Top">
+                                            <materialDesign:ColorPicker Color="{Binding ColorPickerValue,Mode=TwoWay}" Height="118" Width="200"/>
+                                            <Slider Margin="8,0"  Maximum="1" Minimum="0" Value="{Binding ToleranceSliderValue,Mode=TwoWay}"/>
                                         </StackPanel>
 
 
                                     </Grid>
-                                    <Grid x:Name="saved_sect" Visibility="{Binding IsSavedBgTabSelected, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                        <ListView Style="{x:Null}" ItemsSource="{Binding PresetsVMS}" Background="White" Height="120" BorderThickness="1" BorderBrush="#cccccc" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Margin="8 30 8 8" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                                    <Grid x:Name="saved_sect" Visibility="{Binding IsSavedBgTabSelected, Converter={StaticResource BooleanToVisibilityConverter}}" MaxHeight="148" Height="148">
+                                        <ListView Style="{x:Null}" ItemsSource="{Binding PresetsVMS}" Background="White" Height="120" BorderThickness="1" BorderBrush="#cccccc" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Margin="8,8,8,0" ScrollViewer.VerticalScrollBarVisibility="Auto">
                                             <ListView.ItemContainerStyle>
                                                 <Style TargetType="ListViewItem">
                                                     <Setter Property="Template">
