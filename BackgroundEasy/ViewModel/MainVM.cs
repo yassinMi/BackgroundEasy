@@ -385,13 +385,17 @@ namespace BackgroundEasy.ViewModel
         }
         System.Windows.Media.Color GetBrushColor()
         {
-            return new System.Windows.Media.Color()
+            var c =   new System.Windows.Media.Color()
             {
                 R = ColorPickerValue.R,
                 G = ColorPickerValue.G,
                 B = ColorPickerValue.B,
                 A = GetAlpha()
             };
+            var hex = Utils.HexConverter(Utils.DrawingColorFromMediaColor(c));
+            CurentBackgroundHexColor = c.ToString();
+            return c;
+
         }
         public string ShortStringRep
         {
@@ -651,6 +655,17 @@ namespace BackgroundEasy.ViewModel
 
         }
 
+
+
+        private string _CurentBackgroundHexColor;
+        /// <summary>
+        /// one way binding to UI, it only affects the state when triggering the PushHexCommand (via enter)
+        /// </summary>
+        public string CurentBackgroundHexColor
+        {
+            set { _CurentBackgroundHexColor = value; notif(nameof(CurentBackgroundHexColor)); }
+            get { return _CurentBackgroundHexColor; }
+        }
 
 
 
@@ -1223,6 +1238,30 @@ namespace BackgroundEasy.ViewModel
             }
         }
 
+
+
+        public ICommand PushHexCommand { get { return new MICommand(hndlPushHexCommand, canExecutePushHexCommand); } }
+
+        private bool canExecutePushHexCommand()
+        {
+            return true;
+        }
+
+        private void hndlPushHexCommand()
+        {
+            try
+            {
+                var obj = Utils.cc.ConvertFromString(CurentBackgroundHexColor);
+                System.Drawing.Color c = (System.Drawing.Color)obj;
+                ColorPickerValue = Utils.MediaColorFromDrawingColor( c);
+                ToleranceSliderValue = ((double)ColorPickerValue.A) / 255f;
+            }
+            catch (Exception err)
+            {
+                
+            }
+            
+        }
 
 
 

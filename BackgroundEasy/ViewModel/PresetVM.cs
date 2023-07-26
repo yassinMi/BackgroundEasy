@@ -53,6 +53,9 @@ namespace BackgroundEasy.ViewModel
 
 
 
+
+
+
         public ImageSource ThumbImageSource
         {
             
@@ -136,6 +139,8 @@ namespace BackgroundEasy.ViewModel
                 MainVm.ReportErr(err);
             }
         }
+
+
 
 
 

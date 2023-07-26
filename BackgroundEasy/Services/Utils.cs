@@ -30,10 +30,10 @@ namespace BackgroundEasy.Services
     {
 
 
-        static System.Drawing.ColorConverter cc = new System.Drawing.ColorConverter();
+        public static System.Drawing.ColorConverter cc = new System.Drawing.ColorConverter();
         public static String HexConverter(System.Drawing.Color c)
         {
-            return "#" + c.R.ToString("X2") + c.G.ToString("X2") + c.B.ToString("X2");
+            return "#" + c.A.ToString("X2")+ c.R.ToString("X2") + c.G.ToString("X2") + c.B.ToString("X2");
         }
 
         internal static System.Drawing.Color HexToColor(string solidColorHex)
