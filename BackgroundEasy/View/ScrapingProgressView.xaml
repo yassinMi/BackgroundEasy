@@ -28,7 +28,7 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <StackPanel Margin="16,0">
-            <TextBlock Style="{StaticResource MaterialDesignSubtitle2TextBlock}" Text="{Binding StepTitle,TargetNullValue=Downloading}" Margin="0,0,0,4" />
+            <TextBlock Style="{StaticResource MaterialDesignSubtitle2TextBlock}" Text="{Binding StepTitle,TargetNullValue=Processing}" Margin="0,0,0,4" />
             <ProgressBar materialDesign:TransitionAssist.DisableTransitions="True" Value="{Binding ProgressPerc}" IsIndeterminate="{Binding IsIndeterminate}"  Grid.Row="1" Margin="0,8" Foreground="{DynamicResource PaletteBlue}" Height="2" BorderThickness="0">
                 <ProgressBar.Background>
                     <LinearGradientBrush EndPoint="1,0" StartPoint="0,0">

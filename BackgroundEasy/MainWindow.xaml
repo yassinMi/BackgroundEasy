@@ -443,7 +443,7 @@
                                 <custom:PackIconFontAwesome Kind="CogsSolid" Height="16" Width="16"/>
                             </StackPanel>
                         </Button>
-                        <Button Padding="8 8"  Style="{DynamicResource MaterialDesignToolButton}" Command="{Binding ClearSkuCommand}"   Height="40" Margin="0,8" ToolTip="Clear the Images list">
+                        <Button Padding="8 8"  Style="{DynamicResource MaterialDesignToolButton}" Command="{Binding ClearImagesCommand}"   Height="40" Margin="0,8" ToolTip="Clear the Images list">
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                 <custom:PackIconFontAwesome Kind="TrashAltSolid" Height="16" Width="16"/>
                             </StackPanel>

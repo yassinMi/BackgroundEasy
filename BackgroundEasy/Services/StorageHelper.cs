@@ -23,7 +23,7 @@ namespace BackgroundEasy.Services
 
         public void CreateTable()
         {
-            using (var command = new SQLiteCommand("create table IF NOT EXISTS Items (Id INTEGER PRIMARY KEY AUTOINCREMENT, SKU TEXT Unique )", Connection))
+            using (var command = new SQLiteCommand("create table IF NOT EXISTS Items (Id INTEGER PRIMARY KEY AUTOINCREMENT, ImagePath TEXT Unique )", Connection))
             {
                 command.ExecuteNonQuery();
             }
@@ -35,25 +35,25 @@ namespace BackgroundEasy.Services
 
 
         /// <summary>
-        /// add a sku to the table, returns false in case of duplicated item
+        /// add a ImagePath to the table, returns false in case of duplicated item
         /// </summary>
-        /// <param name="sku"></param>
+        /// <param name="magePath"></param>
         /// <returns></returns>
-        public bool AddItem(string sku)
+        public bool AddItem(string imagePath)
         {
             // Check if the item already exists in the table
-            using (var command = new SQLiteCommand("SELECT COUNT(*) FROM Items WHERE SKU = @sku", Connection))
+            using (var command = new SQLiteCommand("SELECT COUNT(*) FROM Items WHERE ImagePath = @ImagePath", Connection))
             {
-                command.Parameters.AddWithValue("@sku", sku);
+                command.Parameters.AddWithValue("@ImagePath", imagePath);
                 int count = Convert.ToInt32(command.ExecuteScalar());
                 if (count > 0)
                     return false;
             }
 
             // Insert the item into the table
-            using (var command = new SQLiteCommand("INSERT INTO Items (SKU) VALUES (@sku)", Connection))
+            using (var command = new SQLiteCommand("INSERT INTO Items (ImagePath) VALUES (@ImagePath)", Connection))
             {
-                command.Parameters.AddWithValue("@sku", sku);
+                command.Parameters.AddWithValue("@ImagePath", imagePath);
                 command.ExecuteNonQuery();
             }
 
@@ -66,11 +66,11 @@ namespace BackgroundEasy.Services
 
             using (var transaction = Connection.BeginTransaction())
             {
-                using (var command = new SQLiteCommand("INSERT OR Ignore INTO Items (SKU) VALUES (@sku)", Connection))
+                using (var command = new SQLiteCommand("INSERT OR Ignore INTO Items (ImagePath) VALUES (@ImagePath)", Connection))
                 {
-                    foreach (string sku in Images)
+                    foreach (string imagePath in Images)
                     {
-                        command.Parameters.AddWithValue("@sku", sku);
+                        command.Parameters.AddWithValue("@ImagePath", imagePath);
                         int rowsAffected = command.ExecuteNonQuery();
                         if (rowsAffected > 0)
                             addedCount++;
@@ -102,13 +102,13 @@ namespace BackgroundEasy.Services
         {
             var items = new List<string>();
 
-            using (var command = new SQLiteCommand("SELECT SKU FROM Items ORDER BY Id", Connection))
+            using (var command = new SQLiteCommand("SELECT ImagePath FROM Items ORDER BY Id", Connection))
             using (var reader = command.ExecuteReader())
             {
                 while (reader.Read())
                 {
-                    string sku = reader.GetString(0);
-                    items.Add(sku);
+                    string imagePath = reader.GetString(0);
+                    items.Add(imagePath);
                 }
             }
 

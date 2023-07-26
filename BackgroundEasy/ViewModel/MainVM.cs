@@ -47,9 +47,6 @@ namespace BackgroundEasy.ViewModel
                 }
             };
             ProcessingHelper = new ScrapingHelper();
-            //var str = string.Join("\n", Enumerable.Range(0, 900).Select(s => s.ToString()));
-            //CurrentSkuInputStr = str;
-            //AddSkuFromTextInputCommand.Execute(null);
 
             //# load images
             foreach (var s in SH.GetItems())
@@ -805,14 +802,7 @@ namespace BackgroundEasy.ViewModel
             {
                 if (senderKey == "importDropOnImagesCollectionView")
                 {
-                    foreach (var f in files)
-                    {
-                        var ext = Path.GetExtension(f).ToLower();
-                        string[] expectedExtensiosns = new string[] { ".png" };
-                        if (expectedExtensiosns.Contains(ext)){
-                            hndlAddImageFromFiles_impl(f);
-                        }
-                    }
+                     hndlAddImageFromFiles_impl_multiple(files);
                 }
             }
             catch (Exception err)
@@ -822,10 +812,45 @@ namespace BackgroundEasy.ViewModel
             
         }
 
-        private void hndlAddImageFromFiles_impl(string f)
+        private void hndlAddImageFromFiles_impl_single(string f)
         {
-            Images.Add(f);
-            SH.AddItem(f);
+            if(Path.GetExtension(f).Equals(".png", StringComparison.OrdinalIgnoreCase) == false)
+            {
+                return;
+            }
+            var added = SH.AddItem(f);
+            if (added)
+            {
+                Message("added image");
+                Images.Add(f);
+            }
+            else
+            {
+                Message("skiped duplicate");
+            }
+           
+        }
+        /// <summary>
+        /// does filtering as well, exception unsafe
+        /// </summary>
+        /// <param name="f"></param>
+        private void hndlAddImageFromFiles_impl_multiple(IEnumerable<string> f)
+        {
+            var toBeAdded = f.Where(ValidateImagePath).ToArray();
+            if (toBeAdded.Length == 0)
+            {
+                Message("no png images");
+                return;
+            }
+            var added = SH.AddItems(toBeAdded);
+            
+            foreach (var item in toBeAdded)
+            {
+                if(!Images.Contains(item))
+                Images.Add(item);
+            }
+            var dups = toBeAdded.Length - added;
+            Message($"added {added} images"+(dups>0?$", duplicates:{toBeAdded.Length- added}":""));
 
         }
 
@@ -874,7 +899,7 @@ namespace BackgroundEasy.ViewModel
                 string[] targetImages = SH.GetItems().ToArray();
                 string outputFolder = CurrentInputDestinationFolder;
                 bool shouldSkipExisting = InputShouldSkipExisting;
-                string outputTemplate = Config.OutputFilenameTemplate?.Replace("{SKU}", "{sku}");
+                string outputTemplate = Config.OutputFilenameTemplate?.Replace("{imagename}", "{ImageName}");
                 if (CurrentBackground.BackgroundImagePath != null && CurrentBackground.BackgroundImage == null)
                 {
                     CurrentBackground.BackgroundImage = File.ReadAllBytes(CurrentBackground.BackgroundImagePath);
@@ -978,7 +1003,7 @@ namespace BackgroundEasy.ViewModel
                         });
 
                         stagecc++;
-                        vm.StepTitle = $"Downloading...";
+                        vm.StepTitle = $"Processing...";
                         await source_task;
 
                     }
@@ -1058,19 +1083,19 @@ namespace BackgroundEasy.ViewModel
 
 
 
-        public ICommand ClearSkuCommand { get { return new MICommand(hndlClearSkuCommand, canExecuteClearSkuCommand); } }
+        public ICommand ClearImagesCommand { get { return new MICommand(hndlClearImagesCommand, canExecuteClearImagesCommand); } }
 
 
-        private bool canExecuteClearSkuCommand()
+        private bool canExecuteClearImagesCommand()
         {
             return Images.Count>0;
         }
 
-        private void hndlClearSkuCommand()
+        private void hndlClearImagesCommand()
         {
             try
             {
-                var res = MessageBox.Show("list will be cleared", ApplicationInfo.APP_TITLE, MessageBoxButton.OKCancel, MessageBoxImage.Warning);
+                var res = MessageBox.Show("Images list will be cleared", ApplicationInfo.APP_TITLE, MessageBoxButton.OKCancel, MessageBoxImage.Warning);
                 if (res != MessageBoxResult.OK) return;
                 SH.ClearTable();
                 Images.Clear();
@@ -1078,7 +1103,6 @@ namespace BackgroundEasy.ViewModel
             }
             catch ( Exception err)
             {
-
                 ReportErr(err);
             }
            
@@ -1110,6 +1134,55 @@ namespace BackgroundEasy.ViewModel
             w.ShowDialog();
 
         }
+
+
+
+        public ICommand AddImageCommand { get { return new MICommand(hndlAddImageCommand, canExecuteAddImageCommand); } }
+
+        private bool canExecuteAddImageCommand()
+        {
+            return true;
+        }
+
+        private void hndlAddImageCommand()
+        {
+            try
+            {
+                var f = IOUtils.PromptOpeningPath(".png", "Open Image", "PNG image|*.png");
+                if (f == "") return;
+                hndlAddImageFromFiles_impl_single(f);
+            }
+            catch (Exception err)
+            {
+                ReportErr(err);
+            }
+        }
+
+
+
+        public ICommand AddImagesFromFolderCommand { get { return new MICommand(hndlAddImagesFromFolderCommand, canExecuteAddImagesFromFolderCommand); } }
+
+        private bool canExecuteAddImagesFromFolderCommand()
+        {
+            return true;
+        }
+
+        private void hndlAddImagesFromFolderCommand()
+        {
+            try
+            {
+                IOUtils.PromptPickingDirectory((s, c) => {
+                    if (c == true) return;
+                    var pngFiles = Directory.GetFiles(s, "*.png");
+                    hndlAddImageFromFiles_impl_multiple(pngFiles);
+                }, "Input Directory");
+            }
+            catch (Exception err)
+            {
+                ReportErr(err);
+            }
+        }
+
 
 
 

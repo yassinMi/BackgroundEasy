@@ -38,14 +38,19 @@
                     <TextBlock VerticalAlignment="Center"  Foreground="#FF979797" Text="{Binding Images.Count,StringFormat='Images ({0})'}" Style="{StaticResource MaterialDesignSubtitle2TextBlock}" />
 
                     <StackPanel Grid.Column="1" Orientation="Horizontal">
-                        <TextBox AcceptsReturn="True" materialDesign:TextFieldAssist.LeadingIconSize="16" materialDesign:TextFieldAssist.LeadingIcon="Text" materialDesign:TextFieldAssist.HasLeadingIcon="True" materialDesign:TextFieldAssist.HasClearButton="True" HorizontalAlignment="Left" Width="106" materialDesign:HintAssist.Hint="Add SKU(s)" ToolTip="Input one or multiple Images (separate with line breaks)" Grid.Column="1" VerticalAlignment="Center"  Margin="4,0" 
-                     Text="{Binding CurrentSkuInputStr,UpdateSourceTrigger=PropertyChanged}"   AttachedComMi:TextBoxAttachedProperties.EnterCommand="{Binding AddSkuFromTextInputCommand}"   />
-                        <!--Button Margin="8 0"  Height="24" Width="24" Style="{StaticResource MaterialDesignIconButton}" ToolTip="Add from file..." Background="{DynamicResource MaterialDesignTextFieldBoxBackground}">
-                                        <materialDesign:PackIcon Width="16" Height="16" Kind="ContentPaste" />
-                                    </-->
-                        <!--Button Grid.Column="1" Height="24" Width="24" Style="{StaticResource MaterialDesignIconButton}" ToolTip="Add Sku's from a file" Background="{DynamicResource MaterialDesignTextFieldBoxBackground}" Command="{Binding AddSkuFromFileCommand}">
-                                        <materialDesign:PackIcon Kind="File" Width="16" Height="16"  />
-                                    </-->
+                        <Button Margin="8 0"  Height="24" Width="24" Style="{StaticResource MaterialDesignIconButton}" ToolTip="Clear List" Command="{Binding ClearImagesCommand}" Foreground="#FFDF281E" Background="#19DF281E">
+                            <!--materialDesign:PackIcon Width="16" Height="16" Kind="ImageAdd" /-->
+                            <Image Height="16" Width="16" VerticalAlignment="Center" HorizontalAlignment="Center" Source="/BackgroundEasy;component/Media/close_16px_FFDF281E.png"/>
+                        </Button>
+                        <Button Margin="0,0,8,0"  Height="24" Width="24" Style="{StaticResource MaterialDesignIconButton}" ToolTip="Add image..." Background="{DynamicResource MaterialDesignTextFieldBoxBackground}" Command="{Binding AddImageCommand}">
+                            <!--materialDesign:PackIcon Width="16" Height="16" Kind="ImageAdd" /-->
+                            <Image Height="16" Width="16" VerticalAlignment="Center" HorizontalAlignment="Center" Source="/BackgroundEasy;component/Media/add_image_16px_FF1A75B5.png"/>
+                        </Button>
+                        <Button Grid.Column="1" Height="24" Width="24" Style="{StaticResource MaterialDesignIconButton}" ToolTip="Add images from a folder" Background="{DynamicResource MaterialDesignTextFieldBoxBackground}" Command="{Binding AddImagesFromFolderCommand}">
+                            <!--materialDesign:PackIcon Kind="FolderAdd" Width="16" Height="16"  /-->
+                            <Image Height="16" Width="16" VerticalAlignment="Center" HorizontalAlignment="Center" Source="/BackgroundEasy;component/Media/add_folder_16px_1A75B5.png"/>
+
+                        </Button>
                     </StackPanel>
 
                 </Grid>

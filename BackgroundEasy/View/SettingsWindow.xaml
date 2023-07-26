@@ -33,30 +33,9 @@
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0">
             <TextBlock Margin="8 12 8 4" Foreground="#FF979797" Text="Requests" Style="{StaticResource MaterialDesignSubtitle2TextBlock}" />
-            <Grid Margin="0 4 0 0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition SharedSizeGroup="lbl"/>
-                    <ColumnDefinition SharedSizeGroup="val"/>
-                </Grid.ColumnDefinitions>
-                <TextBlock  VerticalAlignment="Center"  Margin="8 4" Text="URL Template"  ToolTip="the tamplate used to compute the image URLs from Images"/>
-                <TextBox HorizontalAlignment="Stretch"  materialDesign:HintAssist.Hint="https://www.onehundred80degrees.com/images/imgLarge/Item{sku}.jpg.jpg" Grid.Column="1" VerticalAlignment="Center"  Margin="4,0" Text="{Binding URLTemplate}" />
-            </Grid>
-            <Grid Margin="0 4 0 0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition SharedSizeGroup="lbl"/>
-                    <ColumnDefinition SharedSizeGroup="val"/>
-                </Grid.ColumnDefinitions>
-                <TextBlock  VerticalAlignment="Center"  Margin="8 4" Text="Headers"  ToolTip="Set HTTP Request Headers"/>
-                <TextBox HorizontalAlignment="Stretch"  materialDesign:HintAssist.Hint="key1: value1; key2: value2" Grid.Column="1" VerticalAlignment="Center"  Margin="4,0"  Text="{Binding HeadersStr}"/>
-            </Grid>
-            <Grid Margin="0 4 0 0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition SharedSizeGroup="lbl"/>
-                    <ColumnDefinition SharedSizeGroup="val"/>
-                </Grid.ColumnDefinitions>
-                <CheckBox VerticalAlignment="Center" x:Name="useLimitCount" Margin="8 4" Content="Requests Interval" IsChecked="{Binding UseRequestsInterval}" ToolTip="Set the minimum time delay between requests in milliseconds."/>
-                <TextBox HorizontalAlignment="Left" Width="80" materialDesign:HintAssist.Hint="Max Messages" Grid.Column="1" VerticalAlignment="Center"  Margin="4,0" Text="{Binding RequestsIntervalMs}" IsEnabled="{Binding IsChecked, ElementName=useLimitCount}"/>
-            </Grid>
+            
+            
+            
             <TextBlock Margin="8 12 8 4" Foreground="#FF979797" Text="Output" Style="{StaticResource MaterialDesignSubtitle2TextBlock}" />
 
             <Grid Margin="0 4 0 0">
@@ -65,7 +44,7 @@
                     <ColumnDefinition SharedSizeGroup="val"/>
                 </Grid.ColumnDefinitions>
                 <TextBlock  VerticalAlignment="Center" x:Name="fromTemplate" Margin="8 4" Text="File Name Template"  ToolTip="used to compute the output images names from the Images"/>
-                <TextBox HorizontalAlignment="Stretch"  materialDesign:HintAssist.Hint="Filename template e.e. {sku}.jpg" Grid.Column="1" VerticalAlignment="Center"  Margin="4,0" Text="{Binding OutputFilenameTemplate}" IsEnabled="{Binding IsChecked, ElementName=fromTemplate}"/>
+                <TextBox HorizontalAlignment="Stretch"  materialDesign:HintAssist.Hint="Filename template e.e. {ImageName}.png" Grid.Column="1" VerticalAlignment="Center"  Margin="4,0" Text="{Binding OutputFilenameTemplate}" IsEnabled="{Binding IsChecked, ElementName=fromTemplate}"/>
             </Grid>
             <!--CheckBox IsChecked="{Binding AutoFitExcelColumn}" Content="Auto Fit Column Width" ToolTip="Automatically fit the columns to the cell sizes in the exported Excel file" Margin="16,4,0,4" /-->
             <!--StackPanel Margin="16,4,0,4" Orientation="Horizontal">

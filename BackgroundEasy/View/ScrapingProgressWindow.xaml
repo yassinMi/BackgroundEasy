@@ -24,7 +24,7 @@
         mc:Ignorable="d"
         UseLayoutRounding="True"
         materialDesign:ThemeAssist.Theme="Light"
-        Title="Downloading" Height="246" Width="300" WindowStartupLocation="CenterOwner" ResizeMode="CanMinimize" ShowInTaskbar="False" WindowStyle="SingleBorderWindow">
+        Title="Processing" Height="246" Width="300" WindowStartupLocation="CenterOwner" ResizeMode="CanMinimize" ShowInTaskbar="False" WindowStyle="SingleBorderWindow">
     <Grid>
         <View:ScrapingProgressView/>
     </Grid>

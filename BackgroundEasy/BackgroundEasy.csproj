@@ -417,6 +417,13 @@
   <ItemGroup>
     <Resource Include="Media\example-large.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Media\add_folder_16px_1A75B5.png" />
+    <Resource Include="Media\add_image_16px_FF1A75B5.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Media\close_16px_FFDF281E.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\MaterialDesignThemes.4.5.0\build\MaterialDesignThemes.targets" Condition="Exists('..\packages\MaterialDesignThemes.4.5.0\build\MaterialDesignThemes.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

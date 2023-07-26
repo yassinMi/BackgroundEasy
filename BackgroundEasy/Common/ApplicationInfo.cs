@@ -30,8 +30,8 @@ namespace Mi.Common
 
         //these fields are to be displayed to the user 
         public static string APP_TITLE { get; } = "BackgroundEasy";
-        public static string APP_SUB_TITLE { get; } = "© - copyright todo - ";
-        public static string APP_SHORT_DESCRIPTION { get; } = "A tool to Download Images From Website";
+        public static string APP_SUB_TITLE { get; } = "© - copyright yassinMi - ";
+        public static string APP_SHORT_DESCRIPTION { get; } = "A tool to add a backgound to PNG images";
         public static string APP_VERSION_NOTE { get; } = "";
         /// <summary>
         /// raw
@@ -68,7 +68,7 @@ namespace Mi.Common
         /// <summary>
         /// defines the UI names of the main application classes in a single place so that they can be easily modified
         /// </summary>
-        public static UINames UIN_PRIMARY { get; } = (UINames)"sku,Images";
+        public static UINames UIN_PRIMARY { get; } = (UINames)"Image,Images";
 
 
 
