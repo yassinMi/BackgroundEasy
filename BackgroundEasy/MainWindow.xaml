@@ -637,7 +637,7 @@
                                                     </Grid>
 
                                                 </Border>
-                                                <Grid x:Name="bg_drop_state_overlay" Background="{StaticResource MaterialDesignPaper}"  Visibility="{Binding IsBgInDropFileState, Converter={StaticResource BooleanToVisibilityConverter}}" Grid.RowSpan="2" >
+                                                <Grid x:Name="bg_drop_state_overlay" Background="{StaticResource MaterialDesignPaper}"  Visibility="{Binding IsBgInDropFileState, Converter={StaticResource BooleanToVisibilityConverter}}" Grid.RowSpan="2" d:IsHidden="True" >
 
                                                     <Grid Background="White">
                                                         <Grid.RowDefinitions>
@@ -670,15 +670,15 @@
                                         </Border>
 
                                         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,96,0,0" Grid.Column="0" Orientation="Horizontal">
-                                            <Button Margin="0 0 4 0"  Height="24" Width="24" Style="{StaticResource MaterialDesignIconButton}" ToolTip="Clear List" Command="{Binding ClearBgImagesCommand}" Foreground="#FFDF281E" Background="#19DF281E">
+                                            <Button Margin="0 0 4 0"  Height="24" Width="24" Style="{StaticResource MaterialDesignIconButton}" ToolTip="Clear backgound images List" Command="{Binding ClearBgImagesCommand}" Foreground="#FFDF281E" Background="#19DF281E">
                                                 <!--materialDesign:PackIcon Width="16" Height="16" Kind="ImageAdd" /-->
                                                 <Image Height="16" Width="16" VerticalAlignment="Center" HorizontalAlignment="Center" Source="/BackgroundEasy;component/Media/close_16px_FFDF281E.png"/>
                                             </Button>
-                                            <Button   Height="24" Width="24" Style="{StaticResource MaterialDesignIconButton}" ToolTip="Add image..." Background="{DynamicResource MaterialDesignTextFieldBoxBackground}" Command="{Binding AddBgImageCommand}">
+                                            <Button   Height="24" Width="24" Style="{StaticResource MaterialDesignIconButton}" ToolTip="Add backgound image..." Background="{DynamicResource MaterialDesignTextFieldBoxBackground}" Command="{Binding AddBgImageCommand}">
                                                 <!--materialDesign:PackIcon Width="16" Height="16" Kind="ImageAdd" /-->
                                                 <Image Height="16" Width="16" VerticalAlignment="Center" HorizontalAlignment="Center" Source="/BackgroundEasy;component/Media/add_image_16px_FF1A75B5.png"/>
                                             </Button>
-                                            <Button  Margin="4,0,0,0"  Grid.Column="1" Height="24" Width="24" Style="{StaticResource MaterialDesignIconButton}" ToolTip="Add images from a folder" Background="{DynamicResource MaterialDesignTextFieldBoxBackground}" Command="{Binding AddBgImagesFromFolderCommand}">
+                                            <Button  Margin="4,0,0,0"  Grid.Column="1" Height="24" Width="24" Style="{StaticResource MaterialDesignIconButton}" ToolTip="Add backgound images from a folder" Background="{DynamicResource MaterialDesignTextFieldBoxBackground}" Command="{Binding AddBgImagesFromFolderCommand}">
                                                 <!--materialDesign:PackIcon Kind="FolderAdd" Width="16" Height="16"  /-->
                                                 <Image Height="16" Width="16" VerticalAlignment="Center" HorizontalAlignment="Center" Source="/BackgroundEasy;component/Media/add_folder_16px_1A75B5.png"/>
 

@@ -58,6 +58,12 @@
             </Grid.ColumnDefinitions>
             <Border  Margin="4" Background="{StaticResource MiTransparencyTiles}" Width="{Binding ActualWidth, ElementName=image}" Height="{Binding ActualHeight, ElementName=image}"></Border>
             <Image x:Name="image" Margin="4" Source="{Binding ThumbImageSource}" Width="30" Height="30"/>
+            <Border Visibility="{Binding IsImgsCCVisible, Converter={StaticResource BooleanToVisibilityConverter}}" VerticalAlignment="Center" Background="#1C1C1C" CornerRadius="12" HorizontalAlignment="Right" Opacity="0.7" MinWidth="22" Margin="0,0,-4,0">
+                <Grid >
+                    <TextBlock Style="{StaticResource MaterialDesignCaptionTextBlock}" Margin="0" VerticalAlignment="Center" Foreground="#FFE6E6E6" HorizontalAlignment="Center" Text="{Binding Model.ImagePaths.Length, Mode=OneWay}"/>
+                </Grid>
+
+            </Border>
             <TextBlock x:Name="lbl" Margin="8" Grid.Column="1" VerticalAlignment="Center"  Text="{Binding  Name}" TextTrimming="CharacterEllipsis"/>
         </Grid>
     </materialDesign:ColorZone>

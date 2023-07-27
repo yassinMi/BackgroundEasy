@@ -52,7 +52,7 @@ namespace BackgroundEasy.Model
             }
             else if (storageStr.StartsWith("|"))
             {
-                ImagePath = null; ImagePaths = storageStr.Split('|').ToArray(); return;
+                ImagePath = null; ImagePaths = storageStr.Substring(1). Split('|').ToArray(); return;
             }
             else 
             {

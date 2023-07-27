@@ -1122,7 +1122,7 @@ namespace BackgroundEasy.ViewModel
                 {
                     throw new InvalidUserOperationException("Output Filename Template must contain {ImageName}");
                 }
-                if(IsImageTabSelected&&!File.Exists(CuurentBackgroundImagePath))
+                if(IsImageTabSelected&&(!File.Exists(CuurentBackgroundImagePath) && CurrentBackgroundImagesPaths == null))
                 {
                     throw new InvalidUserOperationException("Please specify the image to use as background");
                 }
@@ -1131,10 +1131,10 @@ namespace BackgroundEasy.ViewModel
                     throw new InvalidUserOperationException("no background selected");
                 }
 
-                if (CurrentBackground.BackgroundImagePath != null && CurrentBackground.BackgroundImage == null)
+                /*if (CurrentBackground.BackgroundImagePath != null && CurrentBackground.BackgroundImage == null)
                 {
                     CurrentBackground.BackgroundImage = File.ReadAllBytes(CurrentBackground.BackgroundImagePath);
-                }
+                }*/
 
                 ScrapingHelper scHelp = new ScrapingHelper();
                
@@ -1143,7 +1143,7 @@ namespace BackgroundEasy.ViewModel
                 CancellationTokenSource cts = new CancellationTokenSource();
 
                 ViewModel.ScrapingProgressVM vm = new ScrapingProgressVM();
-                vm.StepTitle = "-";
+                vm.StepTitle = "Processing...";
                 vm.IsIndeterminate = false;
                 vm.SavedImages = "0";
                 vm.FailedImages = "0";
@@ -1159,7 +1159,7 @@ namespace BackgroundEasy.ViewModel
                 {
 
                     var stagecc = 0;
-                    var total = targetImages.Length;
+                    var total = targetImages.Length* (CurrentBackground.IsMultiImageType?CurrentBackground.BackgroundImagePaths.Length:1);
                     var progressThrottleCc = 0;
                     for (int i = 0; i < 1; i++)
                     {
@@ -1178,11 +1178,11 @@ namespace BackgroundEasy.ViewModel
                         };
                         Directory.CreateDirectory(opts.DumpDir);
                         int progressStep = Math.Max(1, total / 5000);
-                        var source_task = scHelp.ScrapeMessages(targetImages, opts, (p) =>
+                        Action<ProcessingProgressReport> prog_cb = (p) =>
                         {
                             progressThrottleCc++;
                             bytes += p.ImagesSize;
-                            newimages += (p.NewImages );
+                            newimages += (p.NewImages);
                             existingImgs += p.ExistingImages;
                             failedImgs += p.FailedImages;
                             imageCC += p.ProcessedImages;
@@ -1191,12 +1191,21 @@ namespace BackgroundEasy.ViewModel
                                 vm.DownloadedSize = $"{Utils.BytesToString(bytes)}";
                                 vm.SavedImages = (newimages + existingImgs).ToString();
                                 vm.FailedImages = (failedImgs).ToString();
-                                vm.ProgressPerc = (int)(100f*((double)imageCC) / (double)total);
+                                vm.ProgressPerc = (int)(100f * ((double)imageCC) / (double)total);
                             }
-                            
+
                             cts.Token.ThrowIfCancellationRequested();
 
-                        });
+                        };
+                        Task<int> source_task = null;
+                        if (CurrentBackground.IsMultiImageType)
+                        {
+                            source_task = scHelp.ScrapeMessagesMultiple(targetImages, opts, prog_cb);
+                        }
+                        else
+                        {
+                            source_task = scHelp.ScrapeMessages(targetImages, opts, prog_cb);
+                        }
 
                         stagecc++;
                         vm.StepTitle = $"Processing...";
@@ -1205,7 +1214,7 @@ namespace BackgroundEasy.ViewModel
                     }
                     vm.IsIndeterminate = false;
                     vm.ProgressPerc = 100;
-                    await Task.Delay(800);
+                    await Task.Delay(400);
 
 
 

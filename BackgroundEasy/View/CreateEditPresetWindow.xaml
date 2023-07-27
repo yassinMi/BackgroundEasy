@@ -61,6 +61,12 @@
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
                                     <Image Margin="4" Source="{Binding ThumbImageSource}" Width="20" Height="20"/>
+                                    <Border Visibility="{Binding IsImgsCCVisible, Converter={StaticResource BooleanToVisibilityConverter}}" VerticalAlignment="Center" Background="#1C1C1C" CornerRadius="12" HorizontalAlignment="Right" Opacity="0.7" MinWidth="22" Margin="0,0,-10,0">
+                                        <Grid >
+                                            <TextBlock Style="{StaticResource MaterialDesignCaptionTextBlock}" Margin="0" VerticalAlignment="Center" Foreground="#FFE6E6E6" HorizontalAlignment="Center" Text="{Binding Model.ImagePaths.Length, Mode=OneWay}" FontSize="10.667"/>
+                                        </Grid>
+
+                                    </Border>
                                     <TextBlock Margin="8" Grid.Column="1" VerticalAlignment="Center"  Text="{Binding  Name}" TextTrimming="CharacterEllipsis"/>
                                 </Grid>
                             </DataTemplate>

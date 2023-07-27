@@ -35,6 +35,9 @@ namespace BackgroundEasy.ViewModel
 
                 notif(nameof(Model));
                 notif(nameof(ThumbImageSource));
+                notif(nameof(IsImgsCCVisible));
+                notif(nameof(IsImageType));
+
             }
             get { return _Model; }
         }
@@ -49,6 +52,12 @@ namespace BackgroundEasy.ViewModel
         {
             set { _IsSelected = value; notif(nameof(IsSelected)); }
             get { return _IsSelected; }
+        }
+
+
+        public bool IsImgsCCVisible
+        {
+            get { return Model.ImagePaths!=null; }
         }
 
 
@@ -71,7 +80,7 @@ namespace BackgroundEasy.ViewModel
             int height =30, width = 30;
             if (IsImageType)
             {
-                var img = ProcessingUtils.CreateThumbnail(Model.ImagePath);
+                var img = ProcessingUtils.CreateThumbnail(Model.ImagePath??Model.ImagePaths?.FirstOrDefault());
                 width = img.PixelWidth;
                 height = img.PixelHeight;
                 drawingContext.DrawImage(img, new Rect(0, 0, width, height));
