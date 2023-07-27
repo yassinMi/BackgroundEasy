@@ -152,14 +152,14 @@
                         <ControlTemplate TargetType="{x:Type Button}">
 
                             <Grid>
-                                <Rectangle x:Name="border" Fill="{TemplateBinding Background}" RenderTransformOrigin="0.5,0.5" RadiusX="80" RadiusY="80">
+                                <Rectangle x:Name="border" Fill="{TemplateBinding Background}" RenderTransformOrigin="0.5,0.5" RadiusX="5" RadiusY="5">
                                     <Rectangle.RenderTransform>
                                         <ScaleTransform CenterY="0.5" CenterX="0.5" ScaleY="1" ScaleX="1"/>
                                     </Rectangle.RenderTransform>
                                 </Rectangle>
-                                <Rectangle x:Name="overlay" Fill="{TemplateBinding Foreground}" Opacity="0.16" Visibility="Hidden" RadiusX="80" RadiusY="80"/>
+                                <Rectangle x:Name="overlay" Fill="{TemplateBinding Foreground}" Opacity="0.16" Visibility="Hidden" RadiusX="5" RadiusY="5"/>
                                 <materialDesign:Ripple ClipToBounds="True" Clip="{Binding RenderedGeometry, ElementName=GeometryEllipse}" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" ContentStringFormat="{TemplateBinding ContentStringFormat}" Focusable="False" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"/>
-                                <Rectangle x:Name="GeometryEllipse" Focusable="False" Fill="Transparent" IsHitTestVisible="False" RadiusX="80" RadiusY="80"/>
+                                <Rectangle x:Name="GeometryEllipse" Focusable="False" Fill="Transparent" IsHitTestVisible="False" RadiusX="5" RadiusY="5"/>
                             </Grid>
                             <ControlTemplate.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">

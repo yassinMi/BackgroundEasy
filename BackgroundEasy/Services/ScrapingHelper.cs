@@ -140,13 +140,16 @@ namespace BackgroundEasy.Services
         }
 
 
-        public ImageSource AddBackgroundToImagePreview(BitmapImage exampleImg, Background bg, BackgroundLayeringOptions opts)
+        public ImageSource AddBackgroundToImagePreview(BitmapImage exampleImg, Background bg, BackgroundLayeringOptions opts,int imageIx)
         {
             if (bg.IsImageType)
             {
+                
+                var actualBgPath = bg.BackgroundImagePath ?? bg.BackgroundImagePaths[imageIx];
                 var drawingVisual = new DrawingVisual();
                 var drawingContext = drawingVisual.RenderOpen();
-                BitmapImage bgImg = new BitmapImage(new Uri(bg.BackgroundImagePath));
+                
+                BitmapImage bgImg = new BitmapImage(new Uri(actualBgPath));
                 var bgImgSize = new System.Drawing.Size(bgImg.PixelWidth, bgImg.PixelHeight);
                 var exampleImgSize = new System.Drawing.Size(exampleImg.PixelWidth, exampleImg.PixelHeight);
 
@@ -248,10 +251,15 @@ namespace BackgroundEasy.Services
 
     public class Background
     {
+        public Background()
+        {
+
+        }
         public System.Drawing.Color BackgroundColor { get; set; }
         public byte[] BackgroundImage { get; internal set; }
         public string BackgroundImagePath { get; internal set; }
-        public bool IsImageType { get { return BackgroundImage != null || BackgroundImagePath != null; } }
+        public string[] BackgroundImagePaths { get; internal set; }
+        public bool IsImageType { get { return BackgroundImage != null || BackgroundImagePath != null || BackgroundImagePaths != null; } }
     }
     public class BackgroundLayeringOptions
     {

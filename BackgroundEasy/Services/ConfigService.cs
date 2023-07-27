@@ -245,6 +245,14 @@ namespace BackgroundEasy.Services
 
 
 
+        private string[] _LastUserBackgroundImagesPaths;
+        public string[] LastUserBackgroundImagesPaths
+        {
+            set { _LastUserBackgroundImagesPaths = value; notif(nameof(LastUserBackgroundImagesPaths)); }
+            get { return _LastUserBackgroundImagesPaths; }
+        }
+
+
 
 
 

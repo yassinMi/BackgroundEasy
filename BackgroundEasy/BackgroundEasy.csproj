@@ -140,9 +140,11 @@
     <Compile Include="Attached\DropFilesAttachedProperties.cs" />
     <Compile Include="Common\Attached\ChildWindowService.cs" />
     <Compile Include="Common\Attached\DataGridMvvmHelper.cs" />
+    <Compile Include="Common\Attached\DropNativeUXHelper.cs" />
     <Compile Include="Common\Attached\TextBoxAttachedProperties.cs" />
     <Compile Include="Common\BaseWindowViewModel.cs" />
     <Compile Include="Common\BindingProxy.cs" />
+    <Compile Include="Common\DropHelper.cs" />
     <Compile Include="Common\GridSpliterStateDictionary.cs" />
     <Compile Include="Common\Rop.cs" />
     <Compile Include="Common\SqliteMigrator.cs" />

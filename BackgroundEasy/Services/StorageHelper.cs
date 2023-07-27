@@ -136,7 +136,7 @@ namespace BackgroundEasy.Services
                 {
                     using (var command = new SQLiteCommand("INSERT INTO Presets (ImagePath, SolidColorHex, Name) VALUES (@imagePath, @solidColorHex, @name)", Connection))
                     {
-                        command.Parameters.AddWithValue("@imagePath", preset.ImagePath);
+                        command.Parameters.AddWithValue("@imagePath", preset.GetStorageImagePathOrPaths());
                         command.Parameters.AddWithValue("@solidColorHex", preset.SolidColorHex);
                         command.Parameters.AddWithValue("@name", preset.Name);
                         command.ExecuteNonQuery();
@@ -157,16 +157,16 @@ namespace BackgroundEasy.Services
                 {
                     while (reader.Read())
                     {
-                        string imagePath = reader.IsDBNull(0)? null : reader.GetString(0);
+                        string imagePathOrPaths = reader.IsDBNull(0)? null : reader.GetString(0);
                         string solidColorHex = reader.IsDBNull(1) ? null : reader.GetString(1);
                         string name = reader.GetString(2);
 
                         var preset = new Preset
                         {
-                            ImagePath = imagePath,
                             SolidColorHex = solidColorHex,
                             Name = name
                         };
+                    preset.SetStorageImagePathOrPaths(imagePathOrPaths);
 
                         presets.Add(preset);
                     }
@@ -184,7 +184,7 @@ namespace BackgroundEasy.Services
             if (newPreset == null) throw new ArgumentNullException("newPreset");
             if (oldpreset.Name != newPreset.Name) throw new Exception("new preset must have the same name");
             if (
-                oldpreset.ImagePath != newPreset.ImagePath ||
+                oldpreset.GetStorageImagePathOrPaths() != newPreset.GetStorageImagePathOrPaths() ||
                 oldpreset.SolidColorHex != newPreset.SolidColorHex
                 )
             {
@@ -192,7 +192,7 @@ namespace BackgroundEasy.Services
                 {
                     using (var command = new SQLiteCommand("UPDATE Presets SET ImagePath = @imagePath, SolidColorHex = @solidColorHex WHERE Name = @name", Connection))
                     {
-                        command.Parameters.AddWithValue("@imagePath", newPreset.ImagePath);
+                        command.Parameters.AddWithValue("@imagePath", newPreset.GetStorageImagePathOrPaths());
                         command.Parameters.AddWithValue("@solidColorHex", newPreset.SolidColorHex);
                         command.Parameters.AddWithValue("@name", newPreset.Name);
                         command.ExecuteNonQuery();

@@ -62,7 +62,7 @@ namespace BackgroundEasy.ViewModel
             get { return GetThumbImageSource(); }
         }
 
-        public bool IsImageType { get { return Model.ImagePath != null; } }
+        public bool IsImageType { get { return Model.IsImageType; } }
 
         public ImageSource GetThumbImageSource()
         {

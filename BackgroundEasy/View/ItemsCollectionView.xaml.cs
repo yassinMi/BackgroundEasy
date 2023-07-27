@@ -1,4 +1,5 @@
 ﻿using DragDropLib;
+using Mi.Common;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -53,7 +54,6 @@ namespace BackgroundEasy.View
 
         private void ragEnter(object sender, DragEventArgs e)
         {
-            Trace.WriteLine($"ragEnter {sender}");
             var vm = this.DataContext as ViewModel.MainVM;
             if (vm == null)
             {
@@ -71,31 +71,23 @@ namespace BackgroundEasy.View
                 var allowed_extensions_cc = png.Count();
                 if (allowed_extensions_cc > 0)
                 {
-
                     vm.IsInDropFileState = true;
-
                     e.Effects = DragDropEffects.Copy;
-
                     e.Data.SetDropDescription(DropImageType.Copy, "Add To %1", type_destnation_name);
                 }
                 else
                 {
                     e.Data.SetDropDescription(DropImageType.None, null, null);
                     e.Effects = DragDropEffects.None;
-
-
                 }
-
             }
             else
             {
                 e.Data.SetDropDescription(DropImageType.None, "Cannot place here", type_destnation_name);
-
             }
 
             DropHelper.DragEnter(e, this, new Point());
             // DropHelper.DragEnter( App.Current.MainWindow,e);
-
         }
 
         private void rop(object sender, DragEventArgs e)
@@ -106,7 +98,6 @@ namespace BackgroundEasy.View
                 vm.IsInDropFileState = false;
             }
             DropHelper.DragDrop(e, this, e.GetPosition(this));
-
         }
 
 
@@ -114,40 +105,7 @@ namespace BackgroundEasy.View
 
 
 
-    public class DropHelper
-    {
-        public static void DragEnter(DragEventArgs e, IInputElement relv, Point p)
-        {
-            Win32Point wp = p.ToWin32Point();
-            IDropTargetHelper dropHelper = (IDropTargetHelper)new DragDropHelper();
-            dropHelper.DragEnter(IntPtr.Zero, (System.Runtime.InteropServices.ComTypes.IDataObject)e.Data, ref wp, (int)e.Effects);
-        }
-        public static void DragEnter(Window w, DragEventArgs e)
-        {
-            IDropTargetHelper dropHelper = (IDropTargetHelper)new DragDropHelper();
-            dropHelper.DragEnter(w, e.Data, e.GetPosition(w), e.Effects);
-        }
-
-        public static void DragOver(DragEventArgs e, IInputElement relv, Point p)
-        {
-            Win32Point wp = p.ToWin32Point();
-            IDropTargetHelper dropHelper = (IDropTargetHelper)new DragDropHelper();
-            dropHelper.DragOver(ref wp, (int)e.Effects);
-        }
-
-        public static void DragLeave()
-        {
-            IDropTargetHelper dropHelper = (IDropTargetHelper)new DragDropHelper();
-            dropHelper.DragLeave();
-        }
-
-        public static void DragDrop(DragEventArgs e, IInputElement relv, Point p)
-        {
-            Win32Point wp = p.ToWin32Point();
-            IDropTargetHelper dropHelper = (IDropTargetHelper)new DragDropHelper();
-            dropHelper.Drop((System.Runtime.InteropServices.ComTypes.IDataObject)e.Data, ref wp, (int)e.Effects);
-        }
-    }
+    
 
 
 }

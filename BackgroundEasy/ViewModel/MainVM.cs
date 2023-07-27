@@ -26,10 +26,11 @@ using System.Drawing;
 using System.Text.RegularExpressions;
 using System.Windows.Media.Imaging;
 using System.Windows.Media;
+using Mi.Common.Attached;
 
 namespace BackgroundEasy.ViewModel
 {
-    public class MainVM : BaseViewModel, IDropFilesTarget
+    public class MainVM : BaseViewModel, IDropFilesTarget, INativeDropUXVm
     {
 
         public MainVM()
@@ -437,10 +438,89 @@ namespace BackgroundEasy.ViewModel
                     Config.LastUserBackgroundImagePath = value;
                 PushUIToCurrentBackground();
                 notif(nameof(CurrentBgImgImageSource));
+                notif(nameof(IsMultipleBgMode));
+                notif(nameof(IsNavigatorVisible));
+                notif(nameof(CuurentBackgroundImagePathUI));
+
             }
             get { return _CuurentBackgroundImagePath; }
         }
 
+
+        private int _CurrentBgIx=0;
+        public int CurrentBgIx
+        {
+            set { _CurrentBgIx = value;
+                notif(nameof(CurrentBgIx));
+                notif(nameof(CurrentBgIxUI));
+                notif(nameof(CurrentBgImgImageSource));
+                notif(nameof(CuurentBackgroundImagePathUI));
+            }
+            get { return _CurrentBgIx; }
+        }
+
+        /// <summary>
+        /// <see cref="CurrentBgIx"/> +1
+        /// </summary>
+        public int CurrentBgIxUI
+        {
+            get { return CurrentBgIx+1; }
+        }
+
+
+        /// <summary>
+        /// whether a single or a selected ic from the muliple imgs, this shows the path
+        /// </summary>
+        public string CuurentBackgroundImagePathUI
+        {
+            get {
+                try
+                {
+                    return IsMultipleBgMode? CurrentBackgroundImagesPaths?.ElementAt(CurrentBgIx): CuurentBackgroundImagePath;
+                }
+                catch (Exception)
+                {
+                    return null;
+                }
+            }
+        }
+
+
+
+
+        private bool _IsBgInDropFileState;
+        public bool IsBgInDropFileState
+        {
+            set { _IsBgInDropFileState = value; notif(nameof(IsBgInDropFileState)); }
+            get { return _IsBgInDropFileState; }
+        }
+
+
+
+        private string[] _CurentBackgroundImagesPaths = ConfigService.Instance.LastUserBackgroundImagesPaths;
+        public string[] CurrentBackgroundImagesPaths
+        {
+            set
+            {
+                _CurentBackgroundImagesPaths = value;
+                notif(nameof(CurrentBackgroundImagesPaths));
+                if (!deferUpdateUserConfig)
+                    Config.LastUserBackgroundImagesPaths = value;
+                PushUIToCurrentBackground();
+                notif(nameof(CurrentBgImgImageSource));
+                notif(nameof(IsClearBgImgsVisible));
+                notif(nameof(IsMultipleBgMode));
+                notif(nameof(IsNavigatorVisible));
+                notif(nameof(CuurentBackgroundImagePathUI));
+                if (value != null)
+                {
+                    CurrentBgIx = Math.Min(value.Length - 1, CurrentBgIx);
+                }
+
+
+            }
+            get { return _CurentBackgroundImagesPaths; }
+        }
 
 
         public ImageSource CurrentBgImgImageSource
@@ -449,7 +529,14 @@ namespace BackgroundEasy.ViewModel
             {
                 try
                 {
-                    return new BitmapImage(new Uri(CuurentBackgroundImagePath));
+                    if (IsMultipleBgMode)
+                    {
+                        return new BitmapImage(new Uri(CurrentBackgroundImagesPaths[CurrentBgIx]));
+                    }
+                    else
+                    {
+                        return new BitmapImage(new Uri(CuurentBackgroundImagePath));
+                    }
                 }
                 catch (Exception)
                 {
@@ -509,13 +596,17 @@ namespace BackgroundEasy.ViewModel
             }
             else if (SelectedTabIx == 0)
             {
-                if (string.IsNullOrWhiteSpace(CuurentBackgroundImagePath))
+                if (IsMultipleBgMode)
                 {
-                    CurrentBackground = null;
+                    CurrentBackground = new Background() { BackgroundImagePaths= CurrentBackgroundImagesPaths };
+                }
+                else if(CuurentBackgroundImagePath!=null)
+                {
+                    CurrentBackground = new Background() { BackgroundImagePath = CuurentBackgroundImagePath };
                 }
                 else
                 {
-                    CurrentBackground = new Background() { BackgroundImagePath = CuurentBackgroundImagePath };
+                    CurrentBackground = null;
                 }
             }
             else if (SelectedTabIx == 2)
@@ -526,7 +617,8 @@ namespace BackgroundEasy.ViewModel
                     CurrentBackground = new Background()
                     {
                         BackgroundImagePath = p.ImagePath,
-                        BackgroundColor = p.ImagePath != null ? default(System.Drawing.Color): p.TryGetColor()
+                        BackgroundImagePaths = p.ImagePaths,
+                        BackgroundColor = p.IsImageType? default(System.Drawing.Color): p.TryGetColor()
                     };
                 }
                 else
@@ -634,9 +726,20 @@ namespace BackgroundEasy.ViewModel
             }
             else
             {
-                preview_raw = ProcessingHelper.AddBackgroundToImagePreview(exampleImg, bg, new BackgroundLayeringOptions());
-                width = (int)preview_raw.Width;
-                height = (int)preview_raw.Height;
+                try
+                {
+                    preview_raw = ProcessingHelper.AddBackgroundToImagePreview(exampleImg, bg, new BackgroundLayeringOptions(), CurrentBgIx);
+                    width = (int)preview_raw.Width;
+                    height = (int)preview_raw.Height;
+                }
+                catch (Exception err)
+                {
+                    ReportErr(err);
+                    preview_raw = CurrentPreviewImage;
+                    width = CurrentPreviewImage.PixelWidth;
+                    height = CurrentPreviewImage.PixelHeight;
+                }
+                
             }
 
 
@@ -715,6 +818,22 @@ namespace BackgroundEasy.ViewModel
         }
 
 
+        public bool IsNavigatorVisible
+        {
+            get { return IsMultipleBgMode&& CurrentBackgroundImagesPaths.Length>1; }
+        }
+        /// <summary>
+        /// CurrentBackgroundImagesPaths != null && CuurentBackgroundImagePath == null
+        /// </summary>
+        public bool IsMultipleBgMode
+        {
+            get
+            {
+                return CurrentBackgroundImagesPaths != null && CuurentBackgroundImagePath == null;
+            }
+        }
+
+
 
 
 
@@ -745,6 +864,7 @@ namespace BackgroundEasy.ViewModel
         private void hndlSelectBgImageCommand()
         {
             var f = IOUtils.PromptOpeningPath(".png", "Select Background Image", "Image Files|*.*") ;
+            CurrentBackgroundImagesPaths = null;
             CuurentBackgroundImagePath = f;
         }
 
@@ -850,6 +970,10 @@ namespace BackgroundEasy.ViewModel
                 {
                      hndlAddImageFromFiles_impl_multiple(files);
                 }
+                else if (senderKey == "bg")
+                {
+                    hndlAddBgImageFromFiles_impl_multiple(files);
+                }
             }
             catch (Exception err)
             {
@@ -902,9 +1026,34 @@ namespace BackgroundEasy.ViewModel
 
         bool ValidateImagePath(string str)
         {
-            //currently the olnly rule is ext being png
-            return !string.IsNullOrWhiteSpace(str)
-                && Path.GetExtension(str).Equals(".png", StringComparison.InvariantCultureIgnoreCase);
+            try
+            {
+                //currently the olnly rule is ext being png
+                return !string.IsNullOrWhiteSpace(str)
+                    && Path.GetExtension(str).Equals(".png", StringComparison.InvariantCultureIgnoreCase);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+        bool ValidateBgImagePath(string str)
+        {
+            try
+            {
+                //currently the olnly rule is ext being png
+                return !string.IsNullOrWhiteSpace(str)
+                    && (
+                    Path.GetExtension(str).Equals(".png", StringComparison.InvariantCultureIgnoreCase)
+                    || Path.GetExtension(str).Equals(".jpg", StringComparison.InvariantCultureIgnoreCase)
+                    || Path.GetExtension(str).Equals(".jpeg", StringComparison.InvariantCultureIgnoreCase)
+                    )
+                    ;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
         /// <summary>
         /// must call<see cref="IsTextMultipleImages(string)"/> before this
@@ -1214,6 +1363,53 @@ namespace BackgroundEasy.ViewModel
         }
 
 
+        public ICommand AddBgImageCommand { get { return new MICommand(hndlAddBgImageCommand, canExecuteAddBgImageCommand); } }
+
+        private bool canExecuteAddBgImageCommand()
+        {
+            return true;
+        }
+
+        private void hndlAddBgImageCommand()
+        {
+            try
+            {
+                var f = IOUtils.PromptOpeningPath(".png", "Add Background Image", "All Files|*.*");
+                if (f == "") return;
+                hndlAddBgImageFromFiles_impl_single(f);
+            }
+            catch (Exception err)
+            {
+                ReportErr(err);
+            }
+        }
+
+        /// <summary>
+        /// not optimised for bulk adding (ceates too many arrays)
+        /// </summary>
+        /// <param name="f"></param>
+        private void hndlAddBgImageFromFiles_impl_single(string f)
+        {
+            //# case current mode is multiple
+            if (CurrentBackgroundImagesPaths != null)
+            {
+                CurrentBackgroundImagesPaths = CurrentBackgroundImagesPaths.Append(f).ToArray();
+                return;
+            }
+            //# case current mode is single
+            else if (CurrentBackgroundImagesPaths==null && CuurentBackgroundImagePath != null)
+            {
+                var keepValue = CuurentBackgroundImagePath;
+                CuurentBackgroundImagePath = null;
+                CurrentBackgroundImagesPaths = new string[] { keepValue, f };
+            }
+            //# casell empty
+            else
+            {
+                CurrentBackgroundImagesPaths = new string[] {  f };
+            }
+
+        }
 
         public ICommand AddImagesFromFolderCommand { get { return new MICommand(hndlAddImagesFromFolderCommand, canExecuteAddImagesFromFolderCommand); } }
 
@@ -1239,6 +1435,61 @@ namespace BackgroundEasy.ViewModel
         }
 
 
+        public ICommand AddBgImagesFromFolderCommand { get { return new MICommand(hndlAddBgImagesFromFolderCommand, canExecuteAddBgImagesFromFolderCommand); } }
+
+        private bool canExecuteAddBgImagesFromFolderCommand()
+        {
+            return true;
+        }
+
+        private void hndlAddBgImagesFromFolderCommand()
+        {
+            try
+            {
+                IOUtils.PromptPickingDirectory((s, c) => {
+                    if (c == true) return;
+                    var bgImgFiles = Directory.GetFiles(s, "*.png")
+                    .Concat(Directory.GetFiles(s, "*.jpg"))
+                    .Concat(Directory.GetFiles(s, "*.jpeg")).ToArray()
+                    ;
+                    hndlAddBgImageFromFiles_impl_multiple(bgImgFiles);
+                }, "Add Backgound Images");
+            }
+            catch (Exception err)
+            {
+                ReportErr(err);
+            }
+        }
+
+        private void hndlAddBgImageFromFiles_impl_multiple(string[] bgImgFiles)
+        {
+            var validImgs = bgImgFiles.Where(ValidateBgImagePath);
+            var validCC = validImgs.Count();
+            if (validCC == 0)
+            {
+                Message("no valid backgound images");
+                return;
+            }
+            //# case current mode is multiple
+            if (IsMultipleBgMode)
+            {
+                CurrentBackgroundImagesPaths = CurrentBackgroundImagesPaths.Concat(validImgs).ToArray();
+                
+            }
+            //# case current mode is single
+            else if (CurrentBackgroundImagesPaths == null && CuurentBackgroundImagePath != null)
+            {
+                var keepValue = CuurentBackgroundImagePath;
+                CuurentBackgroundImagePath = null;
+                CurrentBackgroundImagesPaths = new string[] { keepValue }.Concat(validImgs).ToArray();
+            }
+            //# casell empty
+            else
+            {
+                CurrentBackgroundImagesPaths = validImgs.ToArray();
+            }
+            Message($"added {validCC} backgound images");
+        }
 
         public ICommand PushHexCommand { get { return new MICommand(hndlPushHexCommand, canExecutePushHexCommand); } }
 
@@ -1264,6 +1515,73 @@ namespace BackgroundEasy.ViewModel
         }
 
 
+        public bool IsClearBgImgsVisible
+        {
+            get { return CuurentBackgroundImagePath != null || (CurrentBackgroundImagesPaths != null && CurrentBackgroundImagesPaths.Any()); }
+        }
 
+
+
+        public ICommand ClearBgImagesCommand { get { return new MICommand(hndlClearBgImagesCommand, canExecuteClearBgImagesCommand); } }
+
+        private bool canExecuteClearBgImagesCommand()
+        {
+            return IsClearBgImgsVisible;
+        }
+
+        private void hndlClearBgImagesCommand()
+        {
+            try
+            {
+                CuurentBackgroundImagePath = null;
+                CurrentBackgroundImagesPaths = null;
+            }
+            catch (Exception err)
+            {
+                ReportErr(err);
+            }
+        }
+
+
+        public ICommand NavigatePreviousBgImageCommand { get { return new MICommand(hndlNavigatePreviousBgImageCommand, canExecuteNavigatePreviousBgImageCommand); } }
+
+        private bool canExecuteNavigatePreviousBgImageCommand()
+        {
+            return IsMultipleBgMode && (CurrentBgIx >0);
+        }
+
+        private void hndlNavigatePreviousBgImageCommand()
+        {
+            if (CurrentBgIx > 0)
+            {
+                CurrentBgIx--;
+                UpdatePreview();
+            }
+        }
+
+
+        public ICommand NavigateNextBgImageCommand { get { return new MICommand(hndlNavigateNextBgImageCommand, canExecuteNavigateNextBgImageCommand); } }
+
+        private bool canExecuteNavigateNextBgImageCommand()
+        {
+            return IsMultipleBgMode&& (CurrentBgIx < CurrentBackgroundImagesPaths.Length - 1);
+        }
+
+        private void hndlNavigateNextBgImageCommand()
+        {
+            if (CurrentBgIx < CurrentBackgroundImagesPaths.Length - 1)
+            {
+                CurrentBgIx++;
+                UpdatePreview();
+            }
+        }
+
+        public void OnIsInDropFileStateChanged(string channel, bool value)
+        {
+            if (channel == "bg")
+            {
+                IsBgInDropFileState = value;
+            }
+        }
     }
 }
