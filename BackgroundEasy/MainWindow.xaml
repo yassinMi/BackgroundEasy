@@ -612,14 +612,20 @@
 
                                         <Border Width="80" Height="80" Margin="8" Background="{StaticResource MiTransparencyTiles}" VerticalAlignment="Top">
 
-                                            <Grid>
-                                                <Image Source="{Binding CurrentBgImgImageSource, Mode=OneWay}"/>
-                                                <Button VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource MaterialDesignIconButton}"  Background="#66C3C3C3" Command="{Binding SelectBgImageCommand}">
-                                                    <custom:PackIconMaterial Kind="ImageEdit" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#FF1A75B5"/>
+                                            <materialDesign:Badged HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
+                                                <materialDesign:Badged.Badge>
+                                                    5
+                                                </materialDesign:Badged.Badge>
+                                                <Grid>
+                                                    <Image Source="{Binding CurrentBgImgImageSource, Mode=OneWay}"/>
+                                                    <Button VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource MaterialDesignIconButton}"  Background="#66C3C3C3" Command="{Binding SelectBgImageCommand}">
+                                                        <custom:PackIconMaterial Kind="ImageEdit" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#FF1A75B5"/>
 
-                                                </Button>
-                                            </Grid>
-                                            
+                                                    </Button>
+                                                </Grid>
+
+                                            </materialDesign:Badged>
+                                           
                                            
 
                                         </Border>
