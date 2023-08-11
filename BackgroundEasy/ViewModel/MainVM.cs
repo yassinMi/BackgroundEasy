@@ -47,7 +47,7 @@ namespace BackgroundEasy.ViewModel
                     affectedVm.Model = e;
                 }
             };
-            ProcessingHelper = new ScrapingHelper();
+            ProcessingHelper = new Processor();
 
             //# load images
             foreach (var s in SH.GetItems())
@@ -1136,7 +1136,7 @@ namespace BackgroundEasy.ViewModel
                     CurrentBackground.BackgroundImage = File.ReadAllBytes(CurrentBackground.BackgroundImagePath);
                 }*/
 
-                ScrapingHelper scHelp = new ScrapingHelper();
+                Processor scHelp = new Processor();
                
 
                 //# execute app task
@@ -1204,7 +1204,7 @@ namespace BackgroundEasy.ViewModel
                         }
                         else
                         {
-                            source_task = scHelp.ScrapeMessages(targetImages, opts, prog_cb);
+                            source_task = scHelp.ProcessImages(targetImages, opts, prog_cb);
                         }
 
                         stagecc++;
@@ -1317,7 +1317,7 @@ namespace BackgroundEasy.ViewModel
 
         public ICommand SaveCurrentBackgroundAsPresetCommand { get { return new MICommand(hndlSaveCurrentBackgroundAsPresetCommand, canExecuteSaveCurrentBackgroundAsPresetCommand); } }
 
-        public ScrapingHelper ProcessingHelper { get; private set; }
+        public Processor ProcessingHelper { get; private set; }
 
         private bool canExecuteSaveCurrentBackgroundAsPresetCommand()
         {

@@ -16,11 +16,11 @@ using System.Windows.Media.Imaging;
 
 namespace BackgroundEasy.Services
 {
-    public class ScrapingHelper
+    public class Processor
     {
 
 
-        static ScrapingHelper()
+        static Processor()
         {
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11;
         }
@@ -73,7 +73,7 @@ namespace BackgroundEasy.Services
 
         }
 
-        public async Task<int> ScrapeMessages(string[] items, ProcessingOptions Options, Action<ProcessingProgressReport> chunckCallback)
+        public async Task<int> ProcessImages(string[] items, ProcessingOptions Options, Action<ProcessingProgressReport> chunckCallback)
         {
             //# validating params
             var bg = Options.Background;
