@@ -1200,7 +1200,7 @@ namespace BackgroundEasy.ViewModel
                         Task<int> source_task = null;
                         if (CurrentBackground.IsMultiImageType)
                         {
-                            source_task = scHelp.ScrapeMessagesMultiple(targetImages, opts, prog_cb);
+                            source_task = scHelp.ProcessImagesMultiple(targetImages, opts, prog_cb);
                         }
                         else
                         {

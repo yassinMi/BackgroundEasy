@@ -20,59 +20,7 @@ namespace BackgroundEasy.Services
     {
 
 
-        static Processor()
-        {
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11;
-        }
-        public static string headersSeparator = ";";
-        static HttpClient hc = new HttpClient();
-
-        /// <summary>
-        /// parses validates ane applies the headers sring e.g. key: value; keyB: ValueB
-        /// NOTE: the separaor is not hardcoded <see cref="headersSeparator"/>
-        /// </summary>
-        /// <param name="headersStr"></param>
-        public void ConfigureCustomHeaders(string headersStr)
-        {
-            if (string.IsNullOrWhiteSpace(headersStr))
-            {
-                hc.DefaultRequestHeaders.Clear();
-                return;
-            }
-
-
-            List<KeyValuePair<string, string>> lst = new List<KeyValuePair<string, string>>();
-
-            // Split the headers string into individual lines
-            string[] headerLines = Regex.Split(headersStr, $@"(?<!\\){headersSeparator}");
-
-            // Parse and add each header to HttpClient's DefaultRequestHeaders
-            foreach (string headerLine in headerLines)
-            {
-                string header = headerLine.Replace($@"\{headersSeparator}", headersSeparator).Trim();
-                int separatorIndex = header.IndexOf(':');
-                if (separatorIndex > 0 && separatorIndex < header.Length - 1)
-                {
-                    string headerName = header.Substring(0, separatorIndex).Trim();
-                    string headerValue = header.Substring(separatorIndex + 1).Trim();
-                    if (string.IsNullOrWhiteSpace(headerName))
-                    {
-                        throw new Exception("empty header name");
-                    }
-                    lst.Add(new KeyValuePair<string, string>(headerName, headerValue));
-                }
-            }
-
-            //apply
-            hc.DefaultRequestHeaders.Clear();
-            foreach (var h in lst)
-            {
-                hc.DefaultRequestHeaders.Add(h.Key, h.Value);
-            }
-
-
-        }
-
+        
         public async Task<int> ProcessImages(string[] items, ProcessingOptions Options, Action<ProcessingProgressReport> chunckCallback)
         {
             //# validating params
@@ -138,7 +86,7 @@ namespace BackgroundEasy.Services
             return successCC;
         }
 
-        public async Task<int> ScrapeMessagesMultiple(string[] items, ProcessingOptions Options, Action<ProcessingProgressReport> chunckCallback)
+        public async Task<int> ProcessImagesMultiple(string[] items, ProcessingOptions Options, Action<ProcessingProgressReport> chunckCallback)
         {
             //# validating params
             var bg = Options.Background;
@@ -212,13 +160,7 @@ namespace BackgroundEasy.Services
             return successCC;
         }
 
-        private async Task<byte[]> FakeRequest(string url)
-        {
-            CoreUtils.WriteLine($"dl: {url}");
-            await Task.Delay(1).ConfigureAwait(false);
-            var size = (int)(Utils.Rnd() * 500000);
-            return Enumerable.Range(0, size).Select(s => new byte()).ToArray();
-        }
+     
 
 
         public ImageSource AddBackgroundToImagePreview(BitmapImage exampleImg, Background bg, BackgroundLayeringOptions opts,int imageIx)
