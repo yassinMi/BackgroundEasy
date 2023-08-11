@@ -32,7 +32,6 @@
             <RowDefinition Height="58"/>
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0">
-            <TextBlock Margin="8 12 8 4" Foreground="#FF979797" Text="Requests" Style="{StaticResource MaterialDesignSubtitle2TextBlock}" />
             
             
             
