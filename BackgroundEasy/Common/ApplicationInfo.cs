@@ -36,7 +36,7 @@ namespace Mi.Common
         /// <summary>
         /// raw
         /// </summary>
-        public static string APP_VERSION_PART { get; } = "0.2.0";
+        public static string APP_VERSION_PART { get; } = "0.3.0";
 
         public static string APP_VERSION { get; } = APP_VERSION_PART + (IsDev ? " [dev]" : " (19-07-2023)");
         //public static string APP_DEVELOPER_NAME { get; set; } = "";
