@@ -728,7 +728,7 @@ namespace BackgroundEasy.ViewModel
             {
                 try
                 {
-                    preview_raw = ProcessingHelper.AddBackgroundToImagePreview(exampleImg, bg, new BackgroundLayeringOptions(), CurrentBgIx);
+                    preview_raw = ProcessingHelper.AddBackgroundToImagePreview(exampleImg, bg, new BackgroundLayeringOptions() { Fit = ConfigService.Instance.BgPlacement == "Fit" }, CurrentBgIx);
                     width = (int)preview_raw.Width;
                     height = (int)preview_raw.Height;
                 }
@@ -880,7 +880,7 @@ namespace BackgroundEasy.ViewModel
                 SettingsVM vm = new SettingsVM();
                 //push config to vm
                 vm.OutputFilenameTemplate = Config.OutputFilenameTemplate;
-
+                vm.CurrentBgPlacement = vm.BgPlacements.FirstOrDefault(p => Config.BgPlacement == p.Name) ?? vm.BgPlacements.First();
                 View.SettingsWindow w = new View.SettingsWindow();
                 w.DataContext = vm;
                 if (!string.IsNullOrEmpty(sect))
@@ -895,7 +895,13 @@ namespace BackgroundEasy.ViewModel
                 //# if not canceled, push setting from vm to app global variables and local storage 
                 if (vm.Canceled == false)
                 {
+                    var old_pgPlc = Config.BgPlacement;
                     Config.OutputFilenameTemplate = vm.OutputFilenameTemplate;
+                    Config.BgPlacement = vm.CurrentBgPlacement?.Name ?? "Contain";
+                    if (Config.BgPlacement != old_pgPlc)
+                    {
+                        PushUIToCurrentBackground();
+                    }
                 }
 
             }

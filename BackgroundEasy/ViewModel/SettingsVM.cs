@@ -1,4 +1,5 @@
-﻿using Mi.Common;
+﻿using BackgroundEasy.Services;
+using Mi.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,22 @@ namespace BackgroundEasy.ViewModel
            
         }
 
+
+
+
+
+        public LayeringStrategy[] BgPlacements { get; set; } = new LayeringStrategy[] {
+            new LayeringStrategy() {Name="Contain",Description="background is centered and enlarged if it's smaller than the image" },
+            new LayeringStrategy() {Name="Fit",Description="background is resized to match the image size" },
+        };
+
+
+        private LayeringStrategy _CurrentBgPlacement;
+        public LayeringStrategy CurrentBgPlacement
+        {
+            set { _CurrentBgPlacement = value; notif(nameof(CurrentBgPlacement)); }
+            get { return _CurrentBgPlacement; }
+        }
 
 
 

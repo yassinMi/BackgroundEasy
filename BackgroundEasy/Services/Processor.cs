@@ -55,7 +55,7 @@ namespace BackgroundEasy.Services
 
                     
                     var img = File.ReadAllBytes(inputpath);
-                    BackgroundLayeringOptions opts = new BackgroundLayeringOptions();
+                    BackgroundLayeringOptions opts = new BackgroundLayeringOptions() { Fit = ConfigService.Instance.BgPlacement == "Fit" };
                     img_data = await AddBackgroundToImage(img, bg, opts,Options.FromatFromTemplate).ConfigureAwait(false);
 
                     imgBytes = img_data.Length;
@@ -127,7 +127,7 @@ namespace BackgroundEasy.Services
                     {
 
                         var img = File.ReadAllBytes(inputpath);
-                        BackgroundLayeringOptions opts = new BackgroundLayeringOptions();
+                        BackgroundLayeringOptions opts = new BackgroundLayeringOptions() { Fit = ConfigService.Instance.BgPlacement == "Fit" };
                         img_data = await AddBackgroundToImage(img, logical_bg, opts, Options.FromatFromTemplate).ConfigureAwait(false);
 
                         imgBytes = img_data.Length;
@@ -188,8 +188,8 @@ namespace BackgroundEasy.Services
                 //# scaling bg as necessary
                 double scaleX = (double)exampleImgSize.Width / bgImgSize.Width;
                 double scaleY = (double)exampleImgSize.Height / bgImgSize.Height;
-                // Choose the larger scaling factor to preserve the aspect ratio of the image
-                double scale = Math.Max(1, Math.Max(scaleX, scaleY));
+                
+                double scale = Math.Max(opts.Fit?0: 1, Math.Max(scaleX, scaleY));
                 // Calculate the new width and height based on the chosen scaling factor
                 int newWidth = (int)(bgImgSize.Width * scale);
                 int newHeight = (int)(bgImgSize.Height * scale);
@@ -245,8 +245,7 @@ namespace BackgroundEasy.Services
                         //# scaling bg as necessary
                         double scaleX = (double)pngImage.Width / backgroundImage.Width;
                         double scaleY = (double)pngImage.Height / backgroundImage.Height;
-                        // Choose the larger scaling factor to preserve the aspect ratio of the image
-                        double scale = Math.Max(1, Math.Max(scaleX, scaleY));
+                        double scale = Math.Max(opts.Fit ? 0 : 1, Math.Max(scaleX, scaleY));
                         // Calculate the new width and height based on the chosen scaling factor
                         int newWidth = (int)(backgroundImage.Width * scale);
                         int newHeight = (int)(backgroundImage.Height * scale);
@@ -279,6 +278,15 @@ namespace BackgroundEasy.Services
 
     }
 
+    public class LayeringStrategy
+    {
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public override string ToString()
+        {
+            return Name;
+        }
+    }
     public class Background
     {
         public Background()
@@ -300,6 +308,10 @@ namespace BackgroundEasy.Services
             Alignment = ContentAlignment.MiddleCenter;
         }
         public ContentAlignment Alignment { get; set; }
+        /// <summary>
+        /// fit vs contain: fit can also reduce the size of the bg, contain only enlarges the bg
+        /// </summary>
+        public bool Fit { get; set; }
     }
 
     /// <summary>

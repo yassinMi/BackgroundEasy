@@ -22,7 +22,7 @@
             Background="{DynamicResource MaterialDesignPaper}"
             UseLayoutRounding="True"
          ResizeMode="NoResize" ShowInTaskbar="False" WindowStartupLocation="CenterOwner"
-        Title="Settings - BackgroundEasy" Height="428" Width="386.943" d:DataContext="{d:DesignInstance {x:Type ViewModel:SettingsVM}, IsDesignTimeCreatable=True}">
+        Title="Settings - BackgroundEasy" Height="300" Width="386.943" d:DataContext="{d:DesignInstance {x:Type ViewModel:SettingsVM}, IsDesignTimeCreatable=True}">
     <Window.Resources>
         <materialDesign:NotConverter x:Key="NotConverter"/>
     </Window.Resources>
@@ -32,8 +32,25 @@
             <RowDefinition Height="58"/>
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0">
-            
-            
+
+
+
+            <TextBlock Margin="8 12 8 4" Foreground="#FF979797" Text="Processing" Style="{StaticResource MaterialDesignSubtitle2TextBlock}" />
+            <Grid Margin="0 4 0 0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition SharedSizeGroup="lbl"/>
+                    <ColumnDefinition SharedSizeGroup="val"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock  VerticalAlignment="Center"  Margin="8 4" Text="Background Placement" />
+
+                <ComboBox SelectedItem="{Binding CurrentBgPlacement}" ItemsSource="{Binding BgPlacements}"  Grid.Column="1" VerticalAlignment="Center"  Margin="4,0" x:Name="bgPlacment"   >
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock ToolTip="{Binding Description}" Text="{Binding Name}"/>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </Grid>
             
             <TextBlock Margin="8 12 8 4" Foreground="#FF979797" Text="Output" Style="{StaticResource MaterialDesignSubtitle2TextBlock}" />
 

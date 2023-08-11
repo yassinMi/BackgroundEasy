@@ -163,6 +163,14 @@ namespace BackgroundEasy.Services
         }
 
 
+        private string _BgPlacement = "Contain";
+        public string BgPlacement
+        {
+            set { _BgPlacement = value; notif(nameof(BgPlacement)); }
+            get { return _BgPlacement; }
+        }
+
+
 
         //last user task input 
 
